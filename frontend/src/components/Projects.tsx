@@ -19,7 +19,7 @@ const projects: Project[] = [
     desc: "A task management web application that helps users create, organize, and track to-do items with a clean and responsive interface.",
     image: "/projects/Listing.png",
     pdf: null,
-    live: "https://listing-wine.vercel.app/",
+    live: "https://listing-task.vercel.app/",
     tech: ["Next.js", "TypeScript", "Tailwind", "MongoDB", "Node.js", "Express"],
     repo: "https://github.com/Yshxero/Listing-App",
   },
