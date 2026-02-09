@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Ray Simon Bantaculo - Portfolio",
-  description: "A passionate software developer with a strong foundation in web and mobile development, eager to contribute to innovative projects and continuously learn new technologies.",
+  description: "A passionate software developer building web and mobile apps while continuously learning new technologies.",
 };
 
 export default function RootLayout({

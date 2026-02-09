@@ -39,7 +39,7 @@ const projects: Project[] = [
     pdf: "/pdfs/Egg-Classifier.pdf",
     live: null,
     tech: ["Html", "CSS", "Javascript", "Node.js", "Python", "Machine Learning", "K-means Clustering"],
-    repo: null,
+    repo: "https://github.com/Yshxero/Egg-Size-Classification.git",
   },
   {
     title: "TapDrop: A Gcash-Enabled Water Vending Machine & IoT System",
