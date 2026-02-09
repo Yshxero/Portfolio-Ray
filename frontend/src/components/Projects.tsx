@@ -7,7 +7,10 @@ type Project = {
   title: string;
   desc: string;
   image: string;
+  pdf: string | null;
+  live: string | null;
   tech: string[];
+  repo?: string | null;
 };
 
 const projects: Project[] = [
@@ -15,31 +18,46 @@ const projects: Project[] = [
     title: "Listing App",
     desc: "A task management web application that helps users create, organize, and track to-do items with a clean and responsive interface.",
     image: "/projects/Listing.png",
+    pdf: null,
+    live: "https://listing-wine.vercel.app/",
     tech: ["Next.js", "TypeScript", "Tailwind", "MongoDB", "Node.js", "Express"],
+    repo: "https://github.com/Yshxero/Listing-App",
   },
   {
     title: "CPELEX Mobile App & Embedded System",
     desc: "A mobile and embedded toll gate system that automates vehicle access and payment using sensor integration and real-time mobile app control.",
     image: "/projects/CPELEX.png",
+    pdf: "/pdfs/CPELEX Toll Gate System.pdf",
+    live: null,
     tech: ["Flutter", "Dart", "Android Studio", "Firebase", "Micropython", "Raspberry Pi", "Sensors"],
+    repo: null,
   },
   {
     title: "Egg-Size Classification System",
     desc: "A machine learning system that automatically classifies egg sizes using image processing and clustering techniques to improve accuracy and consistency.",
     image: "/projects/EggClassifier.png",
+    pdf: "/pdfs/Egg-Classifier.pdf",
+    live: null,
     tech: ["Html", "CSS", "Javascript", "Node.js", "Python", "Machine Learning", "K-means Clustering"],
+    repo: null,
   },
   {
     title: "TapDrop: A Gcash-Enabled Water Vending Machine & IoT System",
     desc: "An IoT-based water vending system that enables cashless payments via GCash while monitoring usage and sensor data in real time.",
     image: "/projects/TapDrop.png",
+    pdf: "/pdfs/TAPDROP_ A Gcash-Enabled Water Vending Machine IEEE.pdf",
+    live: null,
     tech: ["Html", "CSS", "Javascript", "Firebase", "Micropython", "ESP32", "Sensors"],
+    repo: null,
   },
   {
     title: "Pahina: A Book Exchange Online Platform",
     desc: "A mobile platform that allows users to exchange, list, and discover books within a community using a centralized Firebase backend.",
     image: "/projects/Pahina.png",
+    pdf: null,
+    live: null,
     tech: ["Android Studio", "Kotlin", "XML", "Firebase"],
+    repo: null,
   },
 ];
 
@@ -255,9 +273,50 @@ export function ProjectsCarousel() {
                 ))}
               </div>
 
-              <p className="mt-6 text-sm text-slate-400">
-                (Put your full content here: features, role, stack, links, screenshots, etc.)
-              </p>
+              <div className="mt-6 flex flex-wrap gap-3">
+                {activeProject.pdf && (
+                  <>
+                    <a
+                      href={activeProject.pdf}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200 hover:bg-white/10"
+                    >
+                      View PDF
+                    </a>
+
+                    <a
+                      href={activeProject.pdf}
+                      download
+                      className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200 hover:bg-white/10"
+                    >
+                      Download PDF
+                    </a>
+                  </>
+                )}
+
+                {activeProject.live && (
+                  <a
+                    href={activeProject.live}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="rounded-xl border border-cyan-400/30 bg-cyan-500/15 px-4 py-2 text-sm text-cyan-200 hover:bg-cyan-500/25"
+                  >
+                    Live App
+                  </a>
+                )}
+
+                {activeProject.repo && (
+                  <a
+                    href={activeProject.repo}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200 hover:bg-white/10"
+                  >
+                    GitHub Repo
+                  </a>
+                )}
+              </div>
             </div>
           </div>
         </div>
