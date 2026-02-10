@@ -71,10 +71,9 @@ export function ProjectsCarousel() {
   const [open, setOpen] = useState(false);
 
   const total = projects.length;
-  const [navDir, setNavDir] = useState<-1 | 1>(1);
 
-  const gor = () => { setNavDir(1); setActive((a) => mod(a + 1, total)); };
-  const gol = () => { setNavDir(-1); setActive((a) => mod(a - 1, total)); };
+  const gor = () => { setActive((a) => mod(a + 1, total)); };
+  const gol = () => { setActive((a) => mod(a - 1, total)); };
 
   useEffect(() => {
     if (paused || open) return;
@@ -95,11 +94,9 @@ export function ProjectsCarousel() {
   }, []);
 
   const indices = useMemo(() => {
-    const base = [-2, -1, 0, 1, 2];
-    const offsets = navDir === -1 ? [...base].reverse() : base;
+    const offsets = [-2, -1, 0, 1, 2];
     return offsets.map((d) => mod(active + d, total));
-  }, [active, total, navDir]);
-
+  }, [active, total]);
 
   const distance = (i: number) => {
     let d = i - active;
@@ -113,10 +110,12 @@ export function ProjectsCarousel() {
   return (
     <>
       <div
-        className="relative mt-10"
+        className="relative"
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
       >
+        <h2 className="text-3xl font-bold">Projects</h2>
+        <p className="mt-3 text-slate-400">A few things I’ve built recently</p>
         <button
           onClick={() => gol()}
           aria-label="Previous project"
@@ -133,25 +132,19 @@ export function ProjectsCarousel() {
           <span className="text-2xl leading-none">›</span>
         </button>
 
-        <div className="relative mx-auto h-110 sm:h-130 overflow-hidden px-10">
+        <div className="relative mx-auto h-110 sm:h-150 overflow-hidden px-10">
           <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-linear-to-r from-slate-900 to-transparent" />
           <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-linear-to-l from-slate-900 to-transparent" />
-
           <div className="absolute inset-0 flex items-center justify-center">
-            {indices
-              .map((i) => {
-                const d = distance(i);
+            {projects.map((p, i) => {
+              const d = distance(i);
+              const inRange = Math.abs(d) <= 2;
+              const scale = d === 0 ? 1 : Math.abs(d) === 1 ? 0.82 : 0.68;
+              const opacity = d === 0 ? 1 : Math.abs(d) === 1 ? 0.55 : 0.25;
+              const x = d * 420;
+              const z = 50 - Math.abs(d);
 
-                const scale = d === 0 ? 1 : Math.abs(d) === 1 ? 0.82 : 0.68;
-                const opacity = d === 0 ? 1 : Math.abs(d) === 1 ? 0.55 : 0.25;
-
-                const x = d * 420;
-                const z = 50 - Math.abs(d);
-
-                return { i, d, scale, opacity, x, z };
-              })
-              .sort((a, b) => a.z - b.z)
-              .map(({ i, d, scale, opacity, x, z }) => (
+              return (
                 <button
                   key={i}
                   onClick={() => {
@@ -161,10 +154,11 @@ export function ProjectsCarousel() {
                   className="absolute text-left focus:outline-none"
                   style={{
                     transform: `translateX(${x}px) scale(${scale})`,
-                    opacity,
+                    opacity: inRange ? opacity : 0,
                     zIndex: z,
+                    pointerEvents: inRange ? "auto" : "none",
                     transition:
-                      "transform 520ms cubic-bezier(.2,.8,.2,1), opacity 520ms cubic-bezier(.2,.8,.2,1)",
+                      "transform 650ms cubic-bezier(.22,.61,.36,1), opacity 650ms ease",
                   }}
                 >
                   <article
@@ -176,25 +170,16 @@ export function ProjectsCarousel() {
                     ].join(" ")}
                   >
                     <div className="relative h-44 sm:h-52 bg-black/20">
-                      <Image
-                        src={projects[i].image}
-                        alt={projects[i].title}
-                        fill
-                        className="object-cover"
-                      />
+                      <Image src={p.image} alt={p.title} fill className="object-cover" />
                       <div className="absolute inset-0 bg-linear-to-t from-slate-900 via-slate-900/20 to-transparent" />
                     </div>
 
                     <div className="p-6 bg-black/60">
-                      <h3 className="text-lg font-semibold text-slate-100">
-                        {projects[i].title}
-                      </h3>
-                      <p className="mt-3 text-sm text-slate-300">
-                        {projects[i].desc}
-                      </p>
+                      <h3 className="text-lg font-semibold text-slate-100">{p.title}</h3>
+                      <p className="mt-3 text-sm text-slate-300">{p.desc}</p>
 
                       <div className="mt-5 flex flex-wrap gap-2">
-                        {projects[i].tech.slice(0, 7).map((t) => (
+                        {p.tech.slice(0, 7).map((t) => (
                           <span
                             key={t}
                             className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-300"
@@ -212,7 +197,8 @@ export function ProjectsCarousel() {
                     </div>
                   </article>
                 </button>
-              ))}
+              );
+            })}
           </div>
         </div>
 

@@ -4,7 +4,7 @@ import { Mail, Github, Linkedin, Facebook, ArrowUpRight } from "lucide-react";
 
 export function Contact() {
   return (
-    <div className="mx-auto max-w-6xl px-6 py-16 md:py-24">
+    <div className="mx-auto max-w-6xl px-6 py-6 md:py-12">
       <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Contact</h2>
@@ -26,7 +26,7 @@ export function Contact() {
       </div>
 
       <div className="mt-10 grid gap-6 md:grid-cols-3">
-        <div className="rounded-2xl border border-white/10 bg-white/3 p-8">
+        <div className="rounded-2xl border border-white/20 bg-black/60 p-8">
           <p className="text-sm font-semibold text-slate-200">Email</p>
           <a
             href="mailto:bantaculoraysimon@gmail.com"
@@ -39,7 +39,7 @@ export function Contact() {
           </p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/3 p-8">
+        <div className="rounded-2xl border border-white/20 bg-black/60 p-8">
           <p className="text-sm font-semibold text-slate-200">Find me on</p>
 
           <div className="mt-4 space-y-3">
@@ -74,23 +74,23 @@ export function Contact() {
             </a>
 
             <a
-                href="https://www.facebook.com/RSBantaculo/"
-                target="_blank"
-                rel="noreferrer"
-                className="group flex items-center justify-between rounded-xl
+              href="https://www.facebook.com/RSBantaculo/"
+              target="_blank"
+              rel="noreferrer"
+              className="group flex items-center justify-between rounded-xl
                     border border-white/10 bg-white/2 px-4 py-3
                     hover:bg-white/6 transition"
-                >
-                <span className="flex items-center gap-3 text-slate-200">
-                    <Facebook className="h-5 w-5 text-slate-300 group-hover:text-white transition" />
-                    Facebook
-                </span>
-                <ArrowUpRight className="h-4 w-4 text-slate-400 group-hover:text-slate-200 transition" />
+            >
+              <span className="flex items-center gap-3 text-slate-200">
+                <Facebook className="h-5 w-5 text-slate-300 group-hover:text-white transition" />
+                Facebook
+              </span>
+              <ArrowUpRight className="h-4 w-4 text-slate-400 group-hover:text-slate-200 transition" />
             </a>
           </div>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-linear-to-b from-white/6 to-white/2 p-8">
+        <div className="rounded-2xl border border-white/20 bg-black/60 p-8">
           <p className="text-sm font-semibold text-slate-200">Status</p>
           <div className="mt-3 flex items-center gap-2">
             <span className="h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_14px_rgba(52,211,153,0.6)]" />
