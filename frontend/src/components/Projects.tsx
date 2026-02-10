@@ -38,7 +38,7 @@ const projects: Project[] = [
     image: "/projects/EggClassifier.png",
     pdf: "/pdfs/Egg-Classifier.pdf",
     live: null,
-    tech: ["Html", "CSS", "Javascript", "Node.js", "Python", "Machine Learning", "K-means Clustering"],
+    tech: ["Html", "CSS", "Javascript", "FastAPI", "Python", "Machine Learning", "K-means Clustering"],
     repo: "https://github.com/Yshxero/Egg-Size-Classification.git",
   },
   {

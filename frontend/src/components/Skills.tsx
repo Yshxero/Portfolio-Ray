@@ -8,7 +8,7 @@ import { SkillsOrbit } from "@/components/Skill.globe";
 type Group =
   | "All"
   | "Database"
-  | "Frontend"
+  | "Web Frontend"
   | "Backend"
   | "Mobile"
   | "IoT / Embedded"
@@ -25,7 +25,7 @@ type Skill = {
 const groups: Group[] = [
   "All",
   "Database",
-  "Frontend",
+  "Web Frontend",
   "Backend",
   "Mobile",
   "IoT / Embedded",
@@ -35,16 +35,17 @@ const groups: Group[] = [
 
 const skills: Skill[] = [
   { group: "Database", name: "MongoDB Atlas", src: "/skills.colored/mongodb.svg" },
-  { group: "Database", name: "Firebase", src: "/skills.colored/firebase.svg" },
-  { group: "Frontend", name: "Next.js", src: "/skills.colored/next.svg" },
-  { group: "Frontend", name: "TypeScript", src: "/skills.colored/typescript.svg" },
-  { group: "Frontend", name: "JavaScript", src: "/skills.colored/javascript.svg" },
-  { group: "Frontend", name: "HTML", src: "/skills.colored/html.svg" },
-  { group: "Frontend", name: "CSS", src: "/skills.colored/css.svg" },
-  { group: "Frontend", name: "Tailwind CSS", src: "/skills.colored/tailwind.svg" },
-  { group: "Frontend", name: "React.js", src: "/skills.colored/reactjs.svg" },
+  { group: "Database", name: "Firebase Firestore/RealtimeDB", src: "/skills.colored/firebase.svg" },
+  { group: "Web Frontend", name: "Next.js", src: "/skills.colored/next.svg" },
+  { group: "Web Frontend", name: "TypeScript", src: "/skills.colored/typescript.svg" },
+  { group: "Web Frontend", name: "JavaScript", src: "/skills.colored/javascript.svg" },
+  { group: "Web Frontend", name: "HTML", src: "/skills.colored/html.svg" },
+  { group: "Web Frontend", name: "CSS", src: "/skills.colored/css.svg" },
+  { group: "Web Frontend", name: "Tailwind CSS", src: "/skills.colored/tailwind.svg" },
+  { group: "Web Frontend", name: "React.js", src: "/skills.colored/reactjs.svg" },
   { group: "Backend", name: "Node.js", src: "/skills.colored/node.svg" },
   { group: "Backend", name: "Express.js", src: "/skills.colored/expressjs.svg" },
+  { group: "Backend", name: "FastAPI", src: "/skills.colored/fastapi.svg" },
   { group: "Mobile", name: "Flutter", src: "/skills.colored/flutter.svg" },
   { group: "Mobile", name: "Dart", src: "/skills.colored/dart.svg" },
   { group: "Mobile", name: "Kotlin", src: "/skills.colored/kotlin.svg" },
@@ -59,11 +60,15 @@ const skills: Skill[] = [
   { group: "Other Tools", name: "Git", src: "/skills.colored/git.svg" },
   { group: "Other Tools", name: "GitHub", src: "/skills.colored/github.svg" },
   { group: "Other Tools", name: "Docker", src: "/skills.colored/docker.svg" },
+  { group: "Other Tools", name: "VS Code", src: "/skills.colored/VS.svg" },
+  { group: "Other Tools", name: "Antigravity", src: "/skills.colored/antigravity.svg" },
+  { group: "Other Tools", name: "Postman", src: "/skills.colored/postman.svg" },
+  { group: "Other Tools", name: "Firebase", src: "/skills.colored/firebase.svg" },
 ];
 
 const groupIcon: Record<Exclude<Group, "All">, any> = {
   Database,
-  Frontend: Brain,
+  "Web Frontend": Brain,
   Backend: Server,
   Mobile: Smartphone,
   "IoT / Embedded": Cpu,

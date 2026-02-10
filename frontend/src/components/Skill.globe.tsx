@@ -35,6 +35,10 @@ const techs: Tech[] = [
     { name: "Git", src: "/skills.colored/git.svg" },
     { name: "GitHub", src: "/skills.colored/github.svg" },
     { name: "Micropython", src: "/skills.colored/Micro.svg" },
+    { name: "VS Code", src: "/skills.colored/VS.svg" },
+    { name: "Antigravity", src: "/skills.colored/antigravity.svg" },
+    { name: "FastAPI", src: "/skills.colored/fastapi.svg" },
+    { name: "Postman", src: "/skills.colored/postman.svg" },
 
 ];
 
