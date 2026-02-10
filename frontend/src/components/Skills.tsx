@@ -139,7 +139,7 @@ export function Skills() {
       <div className="mx-auto max-w-7xl px-6 py-10 md:py-16">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <h2 className="text-3xl font-bold text-slate-100">Skills</h2>
+            <h2 className="text-3xl font-bold text-slate-100">Tech Stack</h2>
             <p className="mt-2 text-slate-400">Technologies I’ve used across my projects</p>
           </div>
 

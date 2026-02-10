@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 
-function scrollToId(id: string) {
+export function scrollToId(id: string) {
   const el = document.getElementById(id);
   if (!el) return;
 
@@ -11,6 +11,16 @@ function scrollToId(id: string) {
 
   window.scrollTo({ top: y, behavior: "smooth" });
 }
+
+type file = {
+  pdf?: string | null;
+}
+
+const cv: file[] = [
+  { pdf: "/pdfs/RS.Bantaculo_CV.pdf" },
+]
+
+const cvLink = cv[0].pdf ?? "";
 
 export function Hero() {
   return (
@@ -71,12 +81,16 @@ export function Hero() {
                 </p>
 
                 <div className="mt-10 flex gap-6">
-                  <button
-                    onClick={() => scrollToId("projects")}
-                    className="rounded-2xl bg-cyan-500 px-8 py-3 text-lg font-medium text-white hover:bg-cyan-700 transition"
-                  >
-                    View Projects
-                  </button>
+                  {cvLink && (
+                    <a
+                      href={cvLink}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="rounded-2xl bg-cyan-500 px-8 py-3 text-lg font-medium text-white hover:bg-cyan-700 transition"
+                    >
+                      View Resume
+                    </a>
+                  )}
 
                   <button
                     onClick={() => scrollToId("contact")}

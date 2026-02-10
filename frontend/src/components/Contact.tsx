@@ -1,6 +1,7 @@
 "use client";
 
 import { Mail, Github, Linkedin, Facebook, ArrowUpRight } from "lucide-react";
+import { scrollToId } from "@/components/Hero";
 
 export function Contact() {
   return (
@@ -104,7 +105,7 @@ export function Contact() {
 
       <footer className="mt-16 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-sm text-slate-500 md:flex-row">
         <p>© {new Date().getFullYear()} Ray. Built with Next.js + Tailwind</p>
-        <a href="#home" className="hover:text-slate-300 transition">
+        <a onClick={() => scrollToId("home")} className="hover:text-slate-300 transition">
           Back to top ↑
         </a>
       </footer>
