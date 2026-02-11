@@ -59,6 +59,16 @@ const projects: Project[] = [
     tech: ["Android Studio", "Kotlin", "XML", "Firebase"],
     repo: null,
   },
+  {
+    title: "React Calculator",
+    desc: "A calculator web application that allows users to perform basic arithmetic operations using a clean and responsive interface.",
+    image: "/projects/calculator.png",
+    pdf: null,
+    live: null,
+    tech: ["React", "JavaScript", "CSS"],
+    repo: null,
+  },
+
 ];
 
 function mod(n: number, m: number) {
