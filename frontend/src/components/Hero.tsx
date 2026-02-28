@@ -65,7 +65,7 @@ export function Hero() {
                   Hello there,
                 </p>
 
-                <h1 className="mt-4 text-6xl md:text-7xl font-black tracking-tight leading-tight">
+                <h1 className="text-6xl md:text-7xl font-black tracking-tight leading-tight">
                   I&apos;m <span className="text-cyan-400">Ray Simon</span>!
                 </h1>
 
@@ -74,7 +74,7 @@ export function Hero() {
                   systems that solve real problems.
                 </p>
 
-                <p className="mt-8 text-slate-300 text-xl leading-relaxed max-w-2xl">
+                <p className="mt-4 text-slate-300 text-xl leading-relaxed max-w-2xl">
                   I&apos;m currently focused on full-stack development and IoT
                   projects, and I&apos;m always excited to learn new technologies
                   and collaborate on interesting projects.

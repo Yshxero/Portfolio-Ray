@@ -61,7 +61,7 @@ export function Navbar() {
             aria-label="Go to Home"
           >
             <span className="bg-linear-to-r from-cyan-400 to-cyan-600 bg-clip-text text-xl font-semibold text-transparent">
-              {"<Dev/ Simon >"}
+              {"<RSimon>"}
             </span>
           </button>
 

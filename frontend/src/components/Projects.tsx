@@ -60,12 +60,12 @@ const projects: Project[] = [
     repo: null,
   },
   {
-    title: "React Calculator",
-    desc: "A calculator web application that allows users to perform basic arithmetic operations using a clean and responsive interface.",
-    image: "/projects/calculator.png",
+    title: "Senior Records System",
+    desc: "An offline-first Android app for encoding and managing senior citizen records. Features local SQLite storage, full CRUD operations, CSV import/export, search functionality, and a clean dark-themed UI built with React Native and Expo.",
+    image: "/projects/senior-records.png",
     pdf: null,
     live: null,
-    tech: ["React", "JavaScript", "CSS"],
+    tech: ["React Native", "Expo", "SQLite", "TypeScript", "Expo Router"],
     repo: null,
   },
 
