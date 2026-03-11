@@ -1,0 +1,58 @@
+import type { Project } from "@/types";
+
+export const projects: Project[] = [
+  {
+    title: "Listing App",
+    desc: "A task management web application that helps users create, organize, and track to-do items with a clean and responsive interface.",
+    image: "/projects/Listing.png",
+    pdf: null,
+    live: "https://listing-task.vercel.app/",
+    tech: ["Next.js", "TypeScript", "Tailwind", "MongoDB", "Node.js", "Express"],
+    repo: "https://github.com/Yshxero/Listing-App",
+  },
+  {
+    title: "CPELEX Mobile App & Embedded System",
+    desc: "A mobile and embedded toll gate system that automates vehicle access and payment using sensor integration and real-time mobile app control.",
+    image: "/projects/CPELEX.png",
+    pdf: "/pdfs/CPELEX Toll Gate System.pdf",
+    live: null,
+    tech: ["Flutter", "Dart", "Android Studio", "Firebase", "Micropython", "Raspberry Pi", "Sensors"],
+    repo: null,
+  },
+  {
+    title: "Egg-Size Classification System",
+    desc: "A machine learning system that automatically classifies egg sizes using image processing and clustering techniques to improve accuracy and consistency.",
+    image: "/projects/EggClassifier.png",
+    pdf: "/pdfs/Egg-Classifier.pdf",
+    live: null,
+    tech: ["Html", "CSS", "Javascript", "FastAPI", "Python", "Machine Learning", "K-means Clustering"],
+    repo: "https://github.com/Yshxero/Egg-Size-Classification.git",
+  },
+  {
+    title: "TapDrop: A Gcash-Enabled Water Vending Machine & IoT System",
+    desc: "An IoT-based water vending system that enables cashless payments via GCash while monitoring usage and sensor data in real time.",
+    image: "/projects/TapDrop.png",
+    pdf: "/pdfs/TAPDROP_ A Gcash-Enabled Water Vending Machine IEEE.pdf",
+    live: null,
+    tech: ["Html", "CSS", "Javascript", "Firebase", "Micropython", "ESP32", "Sensors"],
+    repo: null,
+  },
+  {
+    title: "Pahina: A Book Exchange Online Platform",
+    desc: "A mobile platform that allows users to exchange, list, and discover books within a community using a centralized Firebase backend.",
+    image: "/projects/Pahina.png",
+    pdf: null,
+    live: null,
+    tech: ["Android Studio", "Kotlin", "XML", "Firebase"],
+    repo: null,
+  },
+  {
+    title: "Senior Records System",
+    desc: "An offline-first Android app for encoding and managing senior citizen records. Features local SQLite storage, full CRUD operations, CSV import/export, search functionality, and a clean dark-themed UI built with React Native and Expo.",
+    image: "/projects/senior-records.png",
+    pdf: null,
+    live: null,
+    tech: ["React Native", "Expo", "SQLite", "TypeScript", "Expo Router"],
+    repo: null,
+  },
+];
