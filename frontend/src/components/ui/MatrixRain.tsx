@@ -73,7 +73,7 @@ export function MatrixRain() {
       style={{
         position: "fixed",
         inset: 0,
-        zIndex: 0,
+        zIndex: -1,
         opacity: opacity,
         pointerEvents: "none",
       }}

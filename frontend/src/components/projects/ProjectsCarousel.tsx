@@ -78,7 +78,7 @@ export function ProjectsCarousel() {
             />
           </div>
           <span style={{ color: "var(--cyan)", letterSpacing: "0.1em" }}>
-            {p.title.slice(0, 20)}{p.title.length > 20 ? "..." : ""}
+            {p.title.toUpperCase()}
           </span>
         </div>
 
