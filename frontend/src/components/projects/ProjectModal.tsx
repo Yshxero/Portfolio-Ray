@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { X, ExternalLink, Github, FileText, Download } from "lucide-react";
 import type { Project } from "@/types";
 
 type Props = { project: Project; onClose: () => void };
@@ -6,46 +7,208 @@ type Props = { project: Project; onClose: () => void };
 export function ProjectModal({ project, onClose }: Props) {
   return (
     <div
-      className="fixed inset-0 z-50 grid place-items-center bg-black/70 p-6"
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 60,
+        display: "grid",
+        placeItems: "center",
+        padding: "24px",
+        background: "rgba(5,10,14,0.88)",
+        backdropFilter: "blur(16px)",
+      }}
       onMouseDown={onClose}
     >
       <div
-        className="w-full max-w-3xl overflow-hidden rounded-2xl border border-white/10 bg-slate-950"
+        style={{
+          width: "100%",
+          maxWidth: "720px",
+          overflow: "hidden",
+          borderRadius: "10px",
+          border: "1px solid rgba(0,212,255,0.25)",
+          background: "rgba(13,27,42,0.98)",
+          boxShadow: "0 0 80px rgba(0,212,255,0.1), 0 32px 64px rgba(0,0,0,0.8)",
+          position: "relative",
+        }}
         onMouseDown={(e) => e.stopPropagation()}
       >
-        <div className="relative h-56 sm:h-72">
-          <Image src={project.image} alt={project.title} fill className="object-cover" />
-          <div className="absolute inset-0 bg-linear-to-t from-slate-950 via-slate-950/30 to-transparent" />
-          <button
-            onClick={onClose}
-            className="absolute right-3 top-3 rounded-full border border-white/10 bg-white/10 px-3 py-1 text-sm text-slate-100 hover:bg-white/20"
+
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            height: "2px",
+            background: "linear-gradient(90deg, var(--green), var(--cyan), var(--green))",
+          }}
+        />
+
+
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            padding: "12px 20px",
+            borderBottom: "1px solid rgba(0,212,255,0.1)",
+            background: "rgba(0,0,0,0.4)",
+          }}
+        >
+          <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#ff5f57" }} />
+          <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#ffbd2e" }} />
+          <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#28c840" }} />
+          <span
+            style={{
+              marginLeft: "10px",
+              fontFamily: "JetBrains Mono, monospace",
+              fontSize: "0.65rem",
+              color: "var(--text-muted)",
+              letterSpacing: "0.1em",
+              flex: 1,
+            }}
           >
-            Close
+            MISSION_DETAIL.log
+          </span>
+          <button
+            id="modal-close"
+            onClick={onClose}
+            aria-label="Close modal"
+            style={{
+              background: "none",
+              border: "1px solid rgba(0,212,255,0.2)",
+              borderRadius: "4px",
+              padding: "4px",
+              cursor: "pointer",
+              color: "var(--text-dim)",
+              display: "flex",
+              alignItems: "center",
+              transition: "all 0.2s",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.color = "var(--cyan)";
+              (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,212,255,0.5)";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.color = "var(--text-dim)";
+              (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,212,255,0.2)";
+            }}
+          >
+            <X size={14} />
           </button>
         </div>
 
-        <div className="p-6">
-          <h3 className="text-2xl font-bold text-slate-100">{project.title}</h3>
-          <p className="mt-3 text-slate-300">{project.desc}</p>
-          <div className="mt-5 flex flex-wrap gap-2">
-            {project.tech.map((t) => (
-              <span key={t} className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-300">
-                {t}
-              </span>
-            ))}
+
+        <div style={{ position: "relative", height: "220px" }}>
+          <Image src={project.image} alt={project.title} fill className="object-cover" />
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: "linear-gradient(to top, rgba(13,27,42,1) 0%, rgba(13,27,42,0.2) 60%, transparent 100%)",
+            }}
+          />
+        </div>
+
+
+        <div style={{ padding: "20px 24px 24px" }}>
+
+          <h3
+            style={{
+              fontFamily: "Orbitron, JetBrains Mono, monospace",
+              fontSize: "1.1rem",
+              fontWeight: 700,
+              color: "var(--text)",
+              letterSpacing: "0.04em",
+              lineHeight: 1.3,
+            }}
+          >
+            {project.title}
+          </h3>
+
+
+          <p
+            style={{
+              marginTop: "12px",
+              color: "var(--text-dim)",
+              lineHeight: 1.7,
+              fontSize: "0.875rem",
+              fontFamily: "Inter, sans-serif",
+            }}
+          >
+            {project.desc}
+          </p>
+
+
+          <div style={{ marginTop: "16px" }}>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+              {project.tech.map((t) => (
+                <span key={t} className="badge-tech">{t}</span>
+              ))}
+            </div>
           </div>
-          <div className="mt-6 flex flex-wrap gap-3">
+
+
+          <div
+            style={{
+              margin: "20px 0",
+              height: "1px",
+              background: "rgba(0,212,255,0.1)",
+            }}
+          />
+
+
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
             {project.pdf && (
               <>
-                <a href={project.pdf} target="_blank" rel="noreferrer" className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200 hover:bg-white/10">View PDF</a>
-                <a href={project.pdf} download className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200 hover:bg-white/10">Download PDF</a>
+                <a
+                  href={project.pdf}
+                  target="_blank"
+                  rel="noreferrer"
+                  id="modal-view-pdf"
+                  style={{ textDecoration: "none" }}
+                >
+                  <span className="btn-secondary" style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                    <FileText size={13} /> VIEW PDF
+                  </span>
+                </a>
+                <a
+                  href={project.pdf}
+                  download
+                  id="modal-download-pdf"
+                  style={{ textDecoration: "none" }}
+                >
+                  <span className="btn-secondary" style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                    <Download size={13} /> DOWNLOAD
+                  </span>
+                </a>
               </>
             )}
             {project.live && (
-              <a href={project.live} target="_blank" rel="noreferrer" className="rounded-xl border border-cyan-400/30 bg-cyan-500/15 px-4 py-2 text-sm text-cyan-200 hover:bg-cyan-500/25">Live App</a>
+              <a
+                href={project.live}
+                target="_blank"
+                rel="noreferrer"
+                id="modal-live"
+                style={{ textDecoration: "none" }}
+              >
+                <span className="btn-primary" style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                  <ExternalLink size={13} /> LIVE APP
+                </span>
+              </a>
             )}
             {project.repo && (
-              <a href={project.repo} target="_blank" rel="noreferrer" className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200 hover:bg-white/10">GitHub Repo</a>
+              <a
+                href={project.repo}
+                target="_blank"
+                rel="noreferrer"
+                id="modal-repo"
+                style={{ textDecoration: "none" }}
+              >
+                <span className="btn-secondary" style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
+                  <Github size={13} /> GITHUB
+                </span>
+              </a>
             )}
           </div>
         </div>

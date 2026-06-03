@@ -1,7 +1,7 @@
 export const site = {
   name: "Ray Simon Bantaculo",
   shortName: "Ray",
-  email: "bantaculoraysimon@gmail.com",
+  email: "rsbantaculo.dev@gmail.com",
   cv: "/pdfs/RS.Bantaculo_CV.pdf",
   github: "https://github.com/Yshxero",
   linkedin: "https://www.linkedin.com/in/bantaculo-raysimon/",

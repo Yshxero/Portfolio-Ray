@@ -9,17 +9,24 @@ type Props = {
 
 export function ProjectCard({ p, d, onClick }: Props) {
   const inRange = Math.abs(d) <= 2;
-  const scale = d === 0 ? 1 : Math.abs(d) === 1 ? 0.82 : 0.68;
-  const opacity = d === 0 ? 1 : Math.abs(d) === 1 ? 0.55 : 0.25;
-  const x = d * 420;
-  const z = 50 - Math.abs(d);
+  const scale   = d === 0 ? 1 : Math.abs(d) === 1 ? 0.82 : 0.67;
+  const opacity = d === 0 ? 1 : Math.abs(d) === 1 ? 0.5 : 0.2;
+  const x       = d * 380;
+  const z       = 50 - Math.abs(d);
+  const isActive = d === 0;
 
   return (
     <button
       onClick={onClick}
       aria-label={`View ${p.title}`}
-      className="absolute text-left focus:outline-none"
       style={{
+        position: "absolute",
+        textAlign: "left",
+        outline: "none",
+        border: "none",
+        background: "none",
+        padding: 0,
+        cursor: "pointer",
         transform: `translateX(${x}px) scale(${scale})`,
         opacity: inRange ? opacity : 0,
         zIndex: z,
@@ -28,28 +35,141 @@ export function ProjectCard({ p, d, onClick }: Props) {
       }}
     >
       <article
-        className={[
-          "w-[320px] sm:w-95 overflow-hidden rounded-2xl border bg-white/3",
-          d === 0
-            ? "border-cyan-400/30 shadow-[0_0_120px_rgba(34,211,238,0.18)]"
-            : "border-white/10",
-        ].join(" ")}
+        style={{
+          width: "320px",
+          overflow: "hidden",
+          borderRadius: "10px",
+          border: isActive
+            ? "1px solid rgba(0,212,255,0.4)"
+            : "1px solid rgba(0,212,255,0.1)",
+          background: isActive ? "rgba(13,27,42,0.95)" : "rgba(10,21,32,0.85)",
+          boxShadow: isActive
+            ? "0 0 60px rgba(0,212,255,0.12), 0 0 120px rgba(0,212,255,0.06), 0 24px 48px rgba(0,0,0,0.7)"
+            : "0 8px 32px rgba(0,0,0,0.5)",
+          transition: "all 0.3s",
+          position: "relative",
+        }}
       >
-        <div className="relative h-44 sm:h-52 bg-black/20">
+
+        {isActive && (
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              height: "2px",
+              background: "linear-gradient(90deg, var(--green), var(--cyan), var(--green))",
+              zIndex: 10,
+            }}
+          />
+        )}
+
+
+        <div style={{ position: "relative", height: "180px", background: "var(--bg)" }}>
           <Image src={p.image} alt={p.title} fill className="object-cover" />
-          <div className="absolute inset-0 bg-linear-to-t from-slate-900 via-slate-900/20 to-transparent" />
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: "linear-gradient(to top, rgba(13,27,42,1) 0%, rgba(13,27,42,0.3) 50%, transparent 100%)",
+            }}
+          />
+
+
+          {isActive && (
+            <div
+              style={{
+                position: "absolute",
+                top: "10px",
+                right: "10px",
+                fontFamily: "JetBrains Mono, monospace",
+                fontSize: "0.6rem",
+                letterSpacing: "0.12em",
+                color: "var(--green)",
+                background: "rgba(5,10,14,0.85)",
+                border: "1px solid rgba(0,255,136,0.25)",
+                borderRadius: "4px",
+                padding: "3px 8px",
+              }}
+            >
+              SELECTED
+            </div>
+          )}
         </div>
-        <div className="p-6 bg-black/60">
-          <h3 className="text-lg font-semibold text-slate-100">{p.title}</h3>
-          <p className="mt-3 text-sm text-slate-300 line-clamp-3">{p.desc}</p>
-          <div className="mt-5 flex flex-wrap gap-2">
-            {p.tech.slice(0, 7).map((t) => (
-              <span key={t} className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-300">
-                {t}
-              </span>
-            ))}
+
+
+        <div style={{ padding: "16px 18px 18px" }}>
+
+          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "8px" }}>
+            <h3
+              style={{
+                fontFamily: "Orbitron, JetBrains Mono, monospace",
+                fontSize: "0.85rem",
+                fontWeight: 700,
+                color: isActive ? "var(--text)" : "rgba(226,234,245,0.7)",
+                letterSpacing: "0.04em",
+                lineHeight: 1.3,
+              }}
+            >
+              {p.title}
+            </h3>
           </div>
-          {d === 0 && <p className="mt-4 text-xs text-cyan-200/80">Click to view full details.</p>}
+
+
+          <p
+            style={{
+              marginTop: "10px",
+              fontSize: "0.75rem",
+              color: isActive ? "var(--text-dim)" : "rgba(107,128,153,0.6)",
+              lineHeight: 1.6,
+              display: "-webkit-box",
+              WebkitLineClamp: 3,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+              fontFamily: "Inter, sans-serif",
+            }}
+          >
+            {p.desc}
+          </p>
+
+
+          <div style={{ marginTop: "12px", display: "flex", flexWrap: "wrap", gap: "5px" }}>
+            {p.tech.slice(0, 5).map((t) => (
+              <span key={t} className="badge-tech">{t}</span>
+            ))}
+            {p.tech.length > 5 && (
+              <span className="badge-tech" style={{ opacity: 0.6 }}>+{p.tech.length - 5}</span>
+            )}
+          </div>
+
+
+          {isActive && (
+            <div
+              style={{
+                marginTop: "14px",
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
+                fontFamily: "JetBrains Mono, monospace",
+                fontSize: "0.65rem",
+                color: "var(--cyan)",
+                letterSpacing: "0.1em",
+              }}
+            >
+              <span
+                style={{
+                  width: "5px",
+                  height: "5px",
+                  borderRadius: "50%",
+                  background: "var(--cyan)",
+                  boxShadow: "0 0 6px rgba(0,212,255,0.8)",
+                  animation: "blink 1.5s ease infinite",
+                }}
+              />
+              PRESS ENTER OR CLICK TO OPEN
+            </div>
+          )}
         </div>
       </article>
     </button>

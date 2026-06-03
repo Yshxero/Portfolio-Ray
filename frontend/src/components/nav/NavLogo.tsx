@@ -2,16 +2,34 @@
 
 import { useEffect, useState } from "react";
 
-const LOGO_TEXT = "<RSimon>";
-const TYPE_SPEED = 75;
+const BOOT_SEQUENCE = [
+  "BOOTING...",
+  "SYS_INIT...",
+  "LOADING...",
+  "RAY.EXE",
+];
+
+const LOGO_TEXT = "RAY.SIMON";
+const TYPE_SPEED = 80;
 
 type Props = { onClick: () => void };
 
 export function NavLogo({ onClick }: Props) {
-  const [typed, setTyped] = useState("");
-  const [done, setDone] = useState(false);
+  const [phase, setPhase]   = useState(0);
+  const [typed, setTyped]   = useState("");
+  const [done,  setDone]    = useState(false);
+
 
   useEffect(() => {
+    if (phase < BOOT_SEQUENCE.length - 1) {
+      const t = setTimeout(() => setPhase((p) => p + 1), 280);
+      return () => clearTimeout(t);
+    }
+  }, [phase]);
+
+
+  useEffect(() => {
+    if (phase < BOOT_SEQUENCE.length - 1) return;
     if (typed.length >= LOGO_TEXT.length) {
       setDone(true);
       return;
@@ -21,33 +39,70 @@ export function NavLogo({ onClick }: Props) {
       TYPE_SPEED
     );
     return () => clearTimeout(t);
-  }, [typed]);
+  }, [phase, typed]);
+
+  const currentLabel = phase < BOOT_SEQUENCE.length - 1
+    ? BOOT_SEQUENCE[phase]
+    : typed;
 
   return (
-    <button onClick={onClick} aria-label="Go to Home" className="shrink-0 group">
-      <span
-        className={[
-          "font-mono text-xl font-semibold inline-flex items-baseline",
-          "transition-all duration-300",
-          "group-hover:drop-shadow-[0_0_12px_rgba(34,211,238,0.75)] group-hover:scale-105",
-        ].join(" ")}
+    <button
+      onClick={onClick}
+      aria-label="Go to Home"
+      style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}
+    >
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "8px",
+          fontFamily: "JetBrains Mono, monospace",
+        }}
       >
-        {typed.split("").map((char, i) =>
-          char === "<" || char === ">" ? (
-            <span key={i} className="text-slate-500 transition-colors duration-300 group-hover:text-slate-300">
-              {char}
-            </span>
-          ) : (
-            <span key={i} className="text-cyan-400">{char}</span>
-          )
-        )}
+
         <span
-          style={{ animation: "blink 1s step-end infinite" }}
-          className={done ? "text-cyan-400" : "text-slate-400"}
+          style={{
+            fontSize: "0.65rem",
+            color: "rgba(0,255,136,0.5)",
+            letterSpacing: "0.1em",
+          }}
         >
-          {done ? "|" : "_"}
+          SYS://
         </span>
-      </span>
+
+
+        <span
+          style={{
+            fontSize: "0.95rem",
+            fontWeight: 700,
+            letterSpacing: "0.15em",
+            color: done ? "var(--cyan)" : "rgba(0,212,255,0.7)",
+            textShadow: done ? "0 0 16px rgba(0,212,255,0.6)" : "none",
+            transition: "text-shadow 0.5s",
+            fontFamily: "Orbitron, JetBrains Mono, monospace",
+          }}
+          data-text={currentLabel}
+          className={done ? "glitch-text" : ""}
+        >
+          {currentLabel}
+        </span>
+
+
+        <span
+          style={{
+            width: "7px",
+            height: "14px",
+            background: done ? "var(--green)" : "var(--cyan)",
+            opacity: done ? undefined : 0.7,
+            borderRadius: "1px",
+            animation: "blink 1s step-end infinite",
+            boxShadow: done
+              ? "0 0 8px rgba(0,255,136,0.8)"
+              : "0 0 4px rgba(0,212,255,0.5)",
+            display: "inline-block",
+          }}
+        />
+      </div>
     </button>
   );
 }

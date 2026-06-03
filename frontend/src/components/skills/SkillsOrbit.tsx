@@ -91,8 +91,9 @@ export function SkillsOrbit() {
           const a = nodes[i], b = nodes[j];
           const d = Math.hypot(a.x - b.x, a.y - b.y);
           if (d < LINK_DIST) {
-            ctx.strokeStyle = `rgba(34,211,238,${1 - d / LINK_DIST})`;
-            ctx.lineWidth = 1;
+            const alpha = (1 - d / LINK_DIST) * 0.5;
+            ctx.strokeStyle = `rgba(0,212,255,${alpha})`;
+            ctx.lineWidth = 0.8;
             ctx.beginPath();
             ctx.moveTo(a.x, a.y);
             ctx.lineTo(b.x, b.y);
@@ -107,20 +108,83 @@ export function SkillsOrbit() {
   }, [nodes]);
 
   return (
-    <div ref={wrapRef} className="relative h-[650px] w-full overflow-hidden rounded-3xl border border-white/20 bg-black/60">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,rgba(34,211,238,0.18),transparent_55%)]" />
-      <canvas ref={canvasRef} className="absolute inset-0" />
+    <div
+      ref={wrapRef}
+      style={{
+        position: "relative",
+        height: "580px",
+        width: "100%",
+        overflow: "hidden",
+        borderRadius: "10px",
+        border: "1px solid rgba(0,212,255,0.12)",
+        background: "rgba(5,10,14,0.7)",
+        boxShadow: "inset 0 0 80px rgba(0,212,255,0.03)",
+      }}
+    >
+
+      <div
+        style={{
+          pointerEvents: "none",
+          position: "absolute",
+          inset: 0,
+          background: "radial-gradient(circle at 50% 40%, rgba(0,212,255,0.07) 0%, transparent 60%)",
+        }}
+      />
+      <canvas ref={canvasRef} style={{ position: "absolute", inset: 0 }} />
       {techs.map((t: Tech, i: number) => (
         <div
           key={t.name}
           ref={(el) => { nodeElsRef.current[i] = el; }}
-          className="group absolute left-0 top-0 will-change-transform"
-          style={{ width: 48, height: 48 }}
+          className="group"
+          style={{ position: "absolute", left: 0, top: 0, willChange: "transform", width: 48, height: 48 }}
         >
-          <div className="grid h-15 w-15 place-items-center rounded-2xl border border-white/10 bg-white/5 backdrop-blur-sm transition hover:scale-110 hover:border-cyan-400/40">
-            <Image src={t.src} alt={t.name} width={40} height={40} />
+          <div
+            style={{
+              width: "52px",
+              height: "52px",
+              display: "grid",
+              placeItems: "center",
+              borderRadius: "10px",
+              border: "1px solid rgba(0,212,255,0.15)",
+              background: "rgba(13,27,42,0.9)",
+              backdropFilter: "blur(4px)",
+              transition: "transform 0.2s, border-color 0.2s, box-shadow 0.2s",
+              cursor: "default",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.transform = "scale(1.15)";
+              (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,212,255,0.5)";
+              (e.currentTarget as HTMLElement).style.boxShadow = "0 0 16px rgba(0,212,255,0.25)";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.transform = "scale(1)";
+              (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,212,255,0.15)";
+              (e.currentTarget as HTMLElement).style.boxShadow = "none";
+            }}
+          >
+            <Image src={t.src} alt={t.name} width={32} height={32} />
           </div>
-          <div className="pointer-events-none absolute left-1/2 top-[115%] hidden -translate-x-1/2 whitespace-nowrap rounded-md border border-white/10 bg-slate-950/80 px-2 py-1 text-xs text-slate-200 group-hover:block">
+
+          <div
+            className="group-hover:block hidden"
+            style={{
+              pointerEvents: "none",
+              position: "absolute",
+              left: "50%",
+              top: "115%",
+              transform: "translateX(-50%)",
+              whiteSpace: "nowrap",
+              borderRadius: "4px",
+              border: "1px solid rgba(0,212,255,0.2)",
+              background: "rgba(5,10,14,0.95)",
+              padding: "3px 10px",
+              fontFamily: "JetBrains Mono, monospace",
+              fontSize: "0.65rem",
+              color: "var(--cyan)",
+              letterSpacing: "0.08em",
+              zIndex: 10,
+            }}
+          >
             {t.name}
           </div>
         </div>

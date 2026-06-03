@@ -1,73 +1,311 @@
-import { Mail, Github, Linkedin, Facebook, ArrowUpRight } from "lucide-react";
+"use client";
+
+import React, { useEffect, useRef, useState } from "react";
+import { Mail, Github, Linkedin, Facebook, ArrowUpRight, Send, MapPin, Clock } from "lucide-react";
 import { site } from "@/data/site";
 
+
 export function Contact() {
+  const [vis, setVis] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setVis(true); io.disconnect(); } },
+      { threshold: 0.1 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   return (
-    <div className="mx-auto max-w-6xl px-6 py-6 md:py-12">
-      <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight">Contact</h2>
-          <p className="mt-3 max-w-xl text-slate-300">
-            Let&apos;s talk and feel free to reach out. I&apos;m open to collaborations and freelance work.
-          </p>
+    <div ref={ref} style={{ maxWidth: "1152px", margin: "0 auto", padding: "64px 24px 48px" }}>
+
+      <div
+        style={{
+          opacity: vis ? 1 : 0,
+          transform: vis ? "none" : "translateY(20px)",
+          transition: "opacity 0.7s ease, transform 0.7s ease",
+          marginBottom: "40px",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "16px" }}>
+          <span className="chapter-label">[ OPEN CHANNEL ]</span>
+          <span style={{ flex: 1, height: "1px", background: "rgba(0,255,136,0.15)" }} />
         </div>
-        <a
-          href={`mailto:${site.email}`}
-          className="inline-flex items-center justify-center gap-2 rounded-2xl bg-cyan-500/20 px-6 py-3 text-cyan-200 border border-cyan-400/30 hover:bg-cyan-500/30 transition"
-        >
-          <Mail className="h-5 w-5" />
-          Email me
-          <ArrowUpRight className="h-4 w-4 opacity-80" />
-        </a>
+
+        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", justifyContent: "space-between", gap: "16px" }}>
+          <div>
+            <h2
+              style={{
+                fontFamily: "Orbitron, sans-serif",
+                fontSize: "clamp(1.8rem, 4vw, 2.5rem)",
+                fontWeight: 700,
+                color: "var(--text)",
+                letterSpacing: "0.05em",
+              }}
+            >
+              Contact
+            </h2>
+            <p style={{ marginTop: "8px", fontFamily: "JetBrains Mono, monospace", fontSize: "0.8rem", color: "var(--text-dim)" }}>
+              {">"} Transmission open — PING me anytime
+            </p>
+          </div>
+
+          <a
+            href={`mailto:${site.email}`}
+            id="contact-email-cta"
+            className="btn-primary"
+            style={{ display: "inline-flex", alignItems: "center", gap: "8px", textDecoration: "none" }}
+          >
+            <Send size={13} />
+            SEND TRANSMISSION
+          </a>
+        </div>
+
+        <div
+          style={{
+            marginTop: "16px",
+            height: "1px",
+            background: "linear-gradient(90deg, rgba(0,255,136,0.5), rgba(0,212,255,0.5), transparent)",
+            width: vis ? "100%" : "0%",
+            transition: "width 1s ease 0.3s",
+          }}
+        />
       </div>
 
-      <div className="mt-10 grid gap-6 md:grid-cols-3">
-        <div className="rounded-2xl border border-white/20 bg-black/60 p-8">
-          <p className="text-sm font-semibold text-slate-200">Email</p>
-          <a href={`mailto:${site.email}`} className="mt-2 block text-slate-300 hover:text-white transition">
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "16px",
+          opacity: vis ? 1 : 0,
+          transform: vis ? "none" : "translateY(20px)",
+          transition: "opacity 0.7s ease 0.2s, transform 0.7s ease 0.2s",
+        }}
+      >
+
+        <ContactCard delay={0} title="Email">
+          <a
+            href={`mailto:${site.email}`}
+            style={{
+              display: "block",
+              marginTop: "12px",
+              fontFamily: "JetBrains Mono, monospace",
+              fontSize: "0.78rem",
+              color: "var(--cyan)",
+              textDecoration: "none",
+              letterSpacing: "0.04em",
+              wordBreak: "break-all",
+            }}
+          >
             {site.email}
           </a>
-          <p className="mt-4 text-sm text-slate-400">Fastest way to reach me.</p>
-        </div>
-
-        <div className="rounded-2xl border border-white/20 bg-black/60 p-8">
-          <p className="text-sm font-semibold text-slate-200">Find me on</p>
-          <div className="mt-4 space-y-3">
-            <a href={site.github} target="_blank" rel="noreferrer" className="group flex items-center justify-between rounded-xl border border-white/10 bg-white/2 px-4 py-3 hover:bg-white/6 transition">
-              <span className="flex items-center gap-3 text-slate-200">
-                <Github className="h-5 w-5 text-slate-300 group-hover:text-white transition" />GitHub
-              </span>
-              <ArrowUpRight className="h-4 w-4 text-slate-400 group-hover:text-slate-200 transition" />
-            </a>
-            <a href={site.linkedin} target="_blank" rel="noreferrer" className="group flex items-center justify-between rounded-xl border border-white/10 bg-white/2 px-4 py-3 hover:bg-white/6 transition">
-              <span className="flex items-center gap-3 text-slate-200">
-                <Linkedin className="h-5 w-5 text-slate-300 group-hover:text-white transition" />LinkedIn
-              </span>
-              <ArrowUpRight className="h-4 w-4 text-slate-400 group-hover:text-slate-200 transition" />
-            </a>
-            <a href={site.facebook} target="_blank" rel="noreferrer" className="group flex items-center justify-between rounded-xl border border-white/10 bg-white/2 px-4 py-3 hover:bg-white/6 transition">
-              <span className="flex items-center gap-3 text-slate-200">
-                <Facebook className="h-5 w-5 text-slate-300 group-hover:text-white transition" />Facebook
-              </span>
-              <ArrowUpRight className="h-4 w-4 text-slate-400 group-hover:text-slate-200 transition" />
-            </a>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+              marginTop: "12px",
+            }}
+          >
+            <Mail size={13} style={{ color: "var(--green)" }} />
+            <p style={{ fontFamily: "JetBrains Mono, monospace", fontSize: "0.65rem", color: "var(--text-muted)" }}>
+              Fastest signal path
+            </p>
           </div>
-        </div>
+        </ContactCard>
 
-        <div className="rounded-2xl border border-white/20 bg-black/60 p-8">
-          <p className="text-sm font-semibold text-slate-200">Status</p>
-          <div className="mt-3 flex items-center gap-2">
-            <span className="h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_14px_rgba(52,211,153,0.6)]" />
-            <p className="text-slate-300">Open to opportunities</p>
+
+        <ContactCard delay={100} title="Find me on">
+          <div style={{ marginTop: "12px", display: "flex", flexDirection: "column", gap: "8px" }}>
+            {[
+              { href: site.github, Icon: Github, label: "GitHub", id: "social-github" },
+              { href: site.linkedin, Icon: Linkedin, label: "LinkedIn", id: "social-linkedin" },
+              { href: site.facebook, Icon: Facebook, label: "Facebook", id: "social-facebook" },
+            ].map(({ href, Icon, label, id }) => (
+              <a
+                key={id}
+                id={id}
+                href={href}
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: "9px 12px",
+                  borderRadius: "6px",
+                  border: "1px solid rgba(0,212,255,0.08)",
+                  background: "rgba(0,212,255,0.03)",
+                  textDecoration: "none",
+                  transition: "all 0.2s",
+                  cursor: "pointer",
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.background = "rgba(0,212,255,0.08)";
+                  (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,212,255,0.3)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.background = "rgba(0,212,255,0.03)";
+                  (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,212,255,0.08)";
+                }}
+              >
+                <span
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    fontFamily: "JetBrains Mono, monospace",
+                    fontSize: "0.75rem",
+                    color: "var(--text-dim)",
+                    letterSpacing: "0.06em",
+                  }}
+                >
+                  <Icon size={14} style={{ color: "var(--cyan)", flexShrink: 0 }} />
+                  {label.toUpperCase()}
+                </span>
+                <ArrowUpRight size={13} style={{ color: "var(--text-muted)" }} />
+              </a>
+            ))}
           </div>
-          <p className="mt-4 text-sm text-slate-400">{"Based in PH • Replies within 24 hours."}</p>
-        </div>
+        </ContactCard>
+
+
+        <ContactCard delay={200} title="Availability">
+          <div style={{ marginTop: "12px", display: "flex", flexDirection: "column", gap: "14px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <div className="status-online" />
+              <p style={{ fontFamily: "JetBrains Mono, monospace", fontSize: "0.75rem", color: "var(--text)", letterSpacing: "0.06em" }}>
+                OPEN TO OPPORTUNITIES
+              </p>
+            </div>
+
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <MapPin size={13} style={{ color: "var(--cyan)", flexShrink: 0 }} />
+              <p style={{ fontFamily: "JetBrains Mono, monospace", fontSize: "0.65rem", color: "var(--text-dim)", letterSpacing: "0.06em" }}>
+                LOCATION: Philippines (PH)
+              </p>
+            </div>
+
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <Clock size={13} style={{ color: "var(--amber)", flexShrink: 0 }} />
+              <p style={{ fontFamily: "JetBrains Mono, monospace", fontSize: "0.65rem", color: "var(--text-dim)", letterSpacing: "0.06em" }}>
+                RESPONSE_TIME: {"<"} 24h
+              </p>
+            </div>
+
+
+            <div
+              style={{
+                marginTop: "4px",
+                padding: "10px 12px",
+                borderRadius: "4px",
+                background: "rgba(0,0,0,0.4)",
+                border: "1px solid rgba(0,255,136,0.1)",
+              }}
+            >
+              <p style={{ fontFamily: "JetBrains Mono, monospace", fontSize: "0.62rem", color: "var(--text-muted)", letterSpacing: "0.06em" }}>
+                <span style={{ color: "var(--green)" }}>{">"}</span>{" "}
+                Seeking collaborations,{" "}
+                <span style={{ color: "var(--cyan)" }}>freelance</span>,{" "}
+                <span style={{ color: "var(--cyan)" }}>full-time</span> roles.
+              </p>
+            </div>
+          </div>
+        </ContactCard>
       </div>
 
-      <footer className="mt-16 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-sm text-slate-500 md:flex-row">
-        <p>© {new Date().getFullYear()} {site.shortName}. Built with Next.js + Tailwind</p>
-        <a href="#home" className="cursor-pointer hover:text-slate-300 transition">Back to top ↑</a>
+
+      <footer
+        style={{
+          marginTop: "60px",
+          padding: "20px 0",
+          borderTop: "1px solid rgba(0,212,255,0.08)",
+          display: "flex",
+          flexWrap: "wrap",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: "12px",
+          opacity: vis ? 1 : 0,
+          transition: "opacity 0.7s ease 0.4s",
+        }}
+      >
+        <p style={{ fontFamily: "JetBrains Mono, monospace", fontSize: "0.65rem", color: "var(--text-muted)", letterSpacing: "0.1em" }}>
+          <span style={{ color: "var(--green)" }}>©</span>{" "}
+          {new Date().getFullYear()} {site.shortName} — Built with{" "}
+          <span style={{ color: "var(--cyan)" }}>Next.js</span> +{" "}
+          <span style={{ color: "var(--cyan)" }}>TypeScript</span>
+        </p>
+        <a
+          href="#home"
+          style={{
+            fontFamily: "JetBrains Mono, monospace",
+            fontSize: "0.65rem",
+            color: "var(--cyan)",
+            textDecoration: "none",
+            letterSpacing: "0.12em",
+            transition: "color 0.2s",
+          }}
+        >
+          [SCROLL_TO_TOP ↑]
+        </a>
       </footer>
+    </div>
+  );
+}
+
+function ContactCard({
+  title,
+  delay,
+  children,
+}: {
+  title: string;
+  delay: number;
+  children: React.ReactNode;
+}) {
+  return (
+    <div
+      style={{
+        flex: "1 1 260px",
+        background: "rgba(13,27,42,0.85)",
+        border: "1px solid rgba(0,212,255,0.12)",
+        borderRadius: "10px",
+        padding: "22px 24px",
+        position: "relative",
+        overflow: "hidden",
+        animationDelay: `${delay}ms`,
+      }}
+      className="card-ce"
+    >
+
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "40px",
+          height: "2px",
+          background: "linear-gradient(90deg, var(--green), transparent)",
+        }}
+      />
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "2px",
+          height: "40px",
+          background: "linear-gradient(180deg, var(--green), transparent)",
+        }}
+      />
+
+      <p style={{ fontFamily: "Orbitron, JetBrains Mono, monospace", fontSize: "0.85rem", fontWeight: 600, color: "var(--text)", letterSpacing: "0.08em" }}>
+        {title.toUpperCase()}
+      </p>
+      {children}
     </div>
   );
 }

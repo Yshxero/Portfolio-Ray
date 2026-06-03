@@ -5,6 +5,7 @@ export type Group =
   | "Database"
   | "Web Frontend"
   | "Backend"
+  | "Desktop"
   | "Mobile"
   | "IoT / Embedded"
   | "Data / ML"
