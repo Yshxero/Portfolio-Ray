@@ -77,7 +77,20 @@ export function ProjectsCarousel() {
               }}
             />
           </div>
-          <span style={{ color: "var(--cyan)", letterSpacing: "0.1em" }}>
+          <span
+            style={{
+              color: "var(--cyan)",
+              letterSpacing: "0.1em",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "280px",
+              display: "inline-block",
+              textAlign: "right",
+              flexShrink: 0
+            }}
+            title={p.title.toUpperCase()}
+          >
             {p.title.toUpperCase()}
           </span>
         </div>

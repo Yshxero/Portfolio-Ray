@@ -42,12 +42,7 @@ export default function HomePage() {
         }}
       >
 
-        <section
-          id="home"
-          className="scroll-mt-16 min-h-screen flex flex-col justify-center"
-        >
-          <Hero />
-        </section>
+        <Hero />
 
 
         <div className="section-divider" />

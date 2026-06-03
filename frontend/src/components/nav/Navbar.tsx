@@ -7,7 +7,7 @@ import { NavLogo } from "./NavLogo";
 import { logSystemEvent } from "@/lib/logger";
 
 const navItems = [
-  { id: "home",     label: "About",    short: "INIT"   },
+  { id: "about",    label: "About",    short: "ABOUT"  },
   { id: "projects", label: "Projects", short: "PROJ"   },
   { id: "skills",   label: "Skills",   short: "STACK"  },
   { id: "contact",  label: "Contact",  short: "SIGNAL" },

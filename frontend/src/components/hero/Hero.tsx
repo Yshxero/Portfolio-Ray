@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { site } from "@/data/site";
+import { ChevronDown } from "lucide-react";
 
 
 const BOOT_LINES = [
@@ -153,38 +154,33 @@ export function Hero() {
     <div
       ref={heroRef}
       style={{
-        maxWidth: "1280px",
-        margin: "0 auto",
-        padding: "80px 24px 40px",
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        gap: "48px",
+        width: "100%",
         opacity: heroVis ? 1 : 0,
         transform: heroVis ? "none" : "translateY(20px)",
         transition: "opacity 0.8s ease, transform 0.8s ease",
       }}
     >
-
-      <div
+      {/* 1. Loader Section (centered, occupies full screen height minus navbar) */}
+      <section
+        id="home"
         style={{
-          display: "grid",
-          gridTemplateColumns: "1fr",
-          gap: "32px",
-          alignItems: "start",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "calc(100vh - 64px)",
+          padding: "40px 24px",
+          position: "relative",
         }}
-        className="lg:grid-cols-2"
       >
-
-        <div>
-
+        <div style={{ width: "100%", maxWidth: "680px" }}>
+          {/* Header Label */}
           <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "24px" }}>
             <span className="chapter-label">[ SYSTEM INIT ]</span>
             <span style={{ flex: 1, height: "1px", background: "rgba(0,255,136,0.2)" }} />
           </div>
 
-
+          {/* Terminal Console Card */}
           <div
             style={{
               background: "rgba(5,10,14,0.9)",
@@ -194,7 +190,7 @@ export function Hero() {
               boxShadow: "0 0 60px rgba(0,212,255,0.06), 0 24px 48px rgba(0,0,0,0.6)",
             }}
           >
-
+            {/* Terminal Title Bar */}
             <div
               style={{
                 display: "flex",
@@ -232,7 +228,7 @@ export function Hero() {
               </span>
             </div>
 
-
+            {/* Terminal Contents */}
             <div
               ref={contentRef}
               style={{
@@ -328,282 +324,321 @@ export function Hero() {
           </div>
         </div>
 
-
+        {/* Pulsing "About Me" scroll down button */}
         <div
           style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "24px",
+            marginTop: "40px",
             opacity: bootDone ? 1 : 0,
-            transform: bootDone ? "none" : "translateX(20px)",
-            transition: "opacity 0.8s ease 0.3s, transform 0.8s ease 0.3s",
+            transform: bootDone ? "none" : "translateY(10px)",
+            transition: "opacity 0.8s ease 0.4s, transform 0.8s ease 0.4s",
+            pointerEvents: bootDone ? "auto" : "none",
           }}
         >
-
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <div style={{ position: "relative" }}>
-
-              <div
-                style={{
-                  position: "absolute",
-                  inset: "-3px",
-                  borderRadius: "50%",
-                  background: "conic-gradient(from 0deg, rgba(0,212,255,0.6), rgba(0,255,136,0.6), rgba(0,212,255,0.6))",
-                  animation: "spin-slow 4s linear infinite",
-                  zIndex: 0,
-                }}
-              />
-              <div
-                style={{
-                  position: "relative",
-                  width: "160px",
-                  height: "160px",
-                  borderRadius: "50%",
-                  overflow: "hidden",
-                  border: "3px solid var(--bg)",
-                  zIndex: 1,
-                  background: "var(--bg-card)",
-                  boxShadow: "0 0 40px rgba(0,212,255,0.3)",
-                }}
-              >
-                <Image
-                  src="/profile.svg"
-                  alt="Ray Simon Bantaculo"
-                  fill
-                  className="object-cover"
-                  priority
-                />
-              </div>
-
-              <div
-                style={{
-                  position: "absolute",
-                  bottom: "8px",
-                  right: "8px",
-                  zIndex: 2,
-                  width: "16px",
-                  height: "16px",
-                  borderRadius: "50%",
-                  background: "var(--green)",
-                  border: "2px solid var(--bg)",
-                  boxShadow: "0 0 12px rgba(0,255,136,0.8)",
-                  animation: "pulse-glow 2s ease infinite",
-                }}
-              />
-            </div>
-          </div>
-
-
-          <div style={{ textAlign: "center" }}>
-
-            <h1
-              className="glitch-text"
-              data-text="Ray Simon"
-              style={{
-                fontFamily: "Orbitron, sans-serif",
-                fontSize: "clamp(2rem, 5vw, 3.2rem)",
-                fontWeight: 900,
-                color: "var(--text)",
-                letterSpacing: "0.05em",
-                lineHeight: 1.1,
-                textShadow: "0 0 30px rgba(0,212,255,0.3)",
-              }}
-            >
-              Ray Simon
-            </h1>
-            <div
-              style={{
-                fontFamily: "Orbitron, sans-serif",
-                fontSize: "clamp(1.4rem, 3vw, 2rem)",
-                fontWeight: 700,
-                color: "var(--cyan)",
-                letterSpacing: "0.08em",
-                marginTop: "4px",
-                textShadow: "0 0 20px rgba(0,212,255,0.5)",
-              }}
-            >
-              Bantaculo
-            </div>
-
-
-            <div
-              style={{
-                marginTop: "16px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "6px",
-                fontFamily: "JetBrains Mono, monospace",
-                fontSize: "0.85rem",
-                color: "var(--green)",
-                letterSpacing: "0.06em",
-                minHeight: "24px",
-              }}
-            >
-              <span style={{ color: "var(--text-muted)" }}>{">"}</span>
-              <span>{roleText}</span>
-              <span
-                style={{
-                  width: "6px",
-                  height: "14px",
-                  background: "var(--green)",
-                  animation: "blink 0.8s step-end infinite",
-                  borderRadius: "1px",
-                  display: "inline-block",
-                }}
-              />
-            </div>
-          </div>
-
-
-          <div
+          <button
+            onClick={() => {
+              document.getElementById("about")?.scrollIntoView({ behavior: "smooth" });
+            }}
+            className="btn-primary"
             style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
+              display: "flex",
+              alignItems: "center",
               gap: "8px",
+              fontSize: "0.8rem",
+              padding: "0.6rem 1.4rem",
+              borderRadius: "20px",
+              boxShadow: "0 0 15px rgba(0, 212, 255, 0.2)",
             }}
           >
-            {STATS.map((s) => (
-              <div
-                key={s.label}
-                style={{
-                  background: "rgba(10,21,32,0.8)",
-                  border: "1px solid rgba(0,212,255,0.1)",
-                  borderRadius: "6px",
-                  padding: "12px 8px",
-                  textAlign: "center",
-                  transition: "border-color 0.3s",
-                }}
-                className="card-ce"
-              >
-                <div
-                  style={{
-                    fontFamily: "Orbitron, sans-serif",
-                    fontSize: "1.1rem",
-                    fontWeight: 700,
-                    color: s.color,
-                    textShadow: `0 0 12px ${s.color}`,
-                  }}
-                >
-                  {s.value}
-                </div>
-                <div
-                  style={{
-                    fontFamily: "JetBrains Mono, monospace",
-                    fontSize: "0.55rem",
-                    color: "var(--text-muted)",
-                    letterSpacing: "0.08em",
-                    marginTop: "4px",
-                    lineHeight: 1.3,
-                  }}
-                >
-                  {s.label}
-                </div>
-              </div>
-            ))}
-          </div>
-
-
-          <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
-            <a
-              href={site.cv}
-              target="_blank"
-              rel="noreferrer"
-              id="hero-view-resume"
-              className="btn-primary"
-              style={{ textDecoration: "none" }}
-            >
-              ./view-resume.sh
-            </a>
-            <a
-              href="#contact"
-              id="hero-contact"
-              className="btn-secondary"
-              style={{ textDecoration: "none" }}
-            >
-              PING ME
-            </a>
-          </div>
+            <span>./about-me.sh</span>
+            <ChevronDown size={14} className="animate-bounce" />
+          </button>
         </div>
-      </div>
+      </section>
 
-
-      <div
+      {/* 2. Profile Details Section (scroll-mt to align below navbar when linked) */}
+      <section
+        id="about"
+        className="scroll-mt-20"
         style={{
-          background: "rgba(10,21,32,0.6)",
-          border: "1px solid rgba(0,212,255,0.1)",
-          borderRadius: "8px",
-          padding: "24px 28px",
-          opacity: bootDone ? 1 : 0,
-          transform: bootDone ? "none" : "translateY(16px)",
-          transition: "opacity 0.8s ease 0.6s, transform 0.8s ease 0.6s",
-          position: "relative",
-          overflow: "hidden",
+          maxWidth: "1280px",
+          margin: "0 auto",
+          padding: "80px 24px",
+          opacity: bootDone ? 1 : 0.05,
+          transition: "opacity 1s ease",
         }}
       >
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr",
+            gap: "48px",
+            alignItems: "start",
+          }}
+          className="lg:grid-cols-12"
+        >
+          {/* Left Column: Picture, Name, Typing effect, Stats, Action Buttons */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "28px",
+            }}
+            className="lg:col-span-5"
+          >
+            {/* Profile Avatar with conic spinning gradient */}
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <div style={{ position: "relative" }}>
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: "-3px",
+                    borderRadius: "50%",
+                    background: "conic-gradient(from 0deg, rgba(0,212,255,0.6), rgba(0,255,136,0.6), rgba(0,212,255,0.6))",
+                    animation: "spin-slow 4s linear infinite",
+                    zIndex: 0,
+                  }}
+                />
+                <div
+                  style={{
+                    position: "relative",
+                    width: "160px",
+                    height: "160px",
+                    borderRadius: "50%",
+                    overflow: "hidden",
+                    border: "3px solid var(--bg)",
+                    zIndex: 1,
+                    background: "var(--bg-card)",
+                    boxShadow: "0 0 40px rgba(0,212,255,0.3)",
+                  }}
+                >
+                  <Image
+                    src="/profile.svg"
+                    alt="Ray Simon Bantaculo"
+                    fill
+                    className="object-cover"
+                    priority
+                  />
+                </div>
+                <div
+                  style={{
+                    position: "absolute",
+                    bottom: "8px",
+                    right: "8px",
+                    zIndex: 2,
+                    width: "16px",
+                    height: "16px",
+                    borderRadius: "50%",
+                    background: "var(--green)",
+                    border: "2px solid var(--bg)",
+                    boxShadow: "0 0 12px rgba(0,255,136,0.8)",
+                    animation: "pulse-glow 2s ease infinite",
+                  }}
+                />
+              </div>
+            </div>
 
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "60px",
-            height: "2px",
-            background: "linear-gradient(90deg, var(--green), transparent)",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "2px",
-            height: "60px",
-            background: "linear-gradient(180deg, var(--green), transparent)",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            bottom: 0,
-            right: 0,
-            width: "60px",
-            height: "2px",
-            background: "linear-gradient(270deg, var(--cyan), transparent)",
-          }}
-        />
-        <div
-          style={{
-            position: "absolute",
-            bottom: 0,
-            right: 0,
-            width: "2px",
-            height: "60px",
-            background: "linear-gradient(0deg, var(--cyan), transparent)",
-          }}
-        />
+            {/* Name Details */}
+            <div style={{ textAlign: "center" }}>
+              <h1
+                className="glitch-text"
+                data-text="Ray Simon"
+                style={{
+                  fontFamily: "Orbitron, sans-serif",
+                  fontSize: "clamp(2rem, 4.5vw, 3rem)",
+                  fontWeight: 900,
+                  color: "var(--text)",
+                  letterSpacing: "0.05em",
+                  lineHeight: 1.1,
+                  textShadow: "0 0 30px rgba(0,212,255,0.3)",
+                }}
+              >
+                Ray Simon
+              </h1>
+              <div
+                style={{
+                  fontFamily: "Orbitron, sans-serif",
+                  fontSize: "clamp(1.4rem, 2.5vw, 1.8rem)",
+                  fontWeight: 700,
+                  color: "var(--cyan)",
+                  letterSpacing: "0.08em",
+                  marginTop: "4px",
+                  textShadow: "0 0 20px rgba(0,212,255,0.5)",
+                }}
+              >
+                Bantaculo
+              </div>
 
+              {/* Typing Role text */}
+              <div
+                style={{
+                  marginTop: "16px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "6px",
+                  fontFamily: "JetBrains Mono, monospace",
+                  fontSize: "0.85rem",
+                  color: "var(--green)",
+                  letterSpacing: "0.06em",
+                  minHeight: "24px",
+                }}
+              >
+                <span style={{ color: "var(--text-muted)" }}>{">"}</span>
+                <span>{roleText}</span>
+                <span
+                  style={{
+                    width: "6px",
+                    height: "14px",
+                    background: "var(--green)",
+                    animation: "blink 0.8s step-end infinite",
+                    borderRadius: "1px",
+                    display: "inline-block",
+                  }}
+                />
+              </div>
+            </div>
 
-        <p style={{ color: "var(--text)", lineHeight: 1.7, fontSize: "0.95rem", fontFamily: "Inter, sans-serif" }}>
-          A{" "}
-          <span style={{ color: "var(--cyan)", fontFamily: "JetBrains Mono, monospace" }}>
-            Computer Engineer
-          </span>{" "}
-          passionate about building technology that creates real-world impact.
-          Experienced in developing end-to-end solutions spanning embedded systems, IoT, web applications, cloud services, and machine learning.
-        </p>
-        <p style={{ color: "var(--text-dim)", lineHeight: 1.7, fontSize: "0.95rem", marginTop: "10px", fontFamily: "Inter, sans-serif" }}>
-          Currently immersed in{" "}
-          <span style={{ color: "var(--green)", fontFamily: "JetBrains Mono, monospace" }}>
-            full-stack development
-          </span>{" "}
-          and{" "}
-          <span style={{ color: "var(--green)", fontFamily: "JetBrains Mono, monospace" }}>
-            IoT engineering
-          </span>
-          . Always building, always learning, always open to meaningful collaborations.
-        </p>
-      </div>
+            {/* Statistics */}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(3, 1fr)",
+                gap: "8px",
+              }}
+            >
+              {STATS.map((s) => (
+                <div
+                  key={s.label}
+                  style={{
+                    background: "rgba(10,21,32,0.8)",
+                    border: "1px solid rgba(0,212,255,0.1)",
+                    borderRadius: "6px",
+                    padding: "12px 8px",
+                    textAlign: "center",
+                    transition: "border-color 0.3s",
+                  }}
+                  className="card-ce"
+                >
+                  <div
+                    style={{
+                      fontFamily: "Orbitron, sans-serif",
+                      fontSize: "1.1rem",
+                      fontWeight: 700,
+                      color: s.color,
+                      textShadow: `0 0 12px ${s.color}`,
+                    }}
+                  >
+                    {s.value}
+                  </div>
+                  <div
+                    style={{
+                      fontFamily: "JetBrains Mono, monospace",
+                      fontSize: "0.55rem",
+                      color: "var(--text-muted)",
+                      letterSpacing: "0.08em",
+                      marginTop: "4px",
+                      lineHeight: 1.3,
+                    }}
+                  >
+                    {s.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Resume/Contact Actions */}
+            <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
+              <a
+                href={site.cv}
+                target="_blank"
+                rel="noreferrer"
+                id="hero-view-resume"
+                className="btn-primary"
+                style={{ textDecoration: "none" }}
+              >
+                ./view-resume.sh
+              </a>
+              <a
+                href="#contact"
+                id="hero-contact"
+                className="btn-secondary"
+                style={{ textDecoration: "none" }}
+              >
+                PING ME
+              </a>
+            </div>
+          </div>
+
+          {/* Right Column: About Description Console Card */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+            }}
+            className="lg:col-span-7"
+          >
+            <div
+              style={{
+                background: "rgba(10,21,32,0.6)",
+                border: "1px solid rgba(0,212,255,0.15)",
+                borderRadius: "8px",
+                overflow: "hidden",
+                boxShadow: "0 4px 24px rgba(0,0,0,0.5)",
+              }}
+            >
+              {/* Fake Text File Header */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  padding: "10px 16px",
+                  borderBottom: "1px solid rgba(0,212,255,0.1)",
+                  background: "rgba(0,0,0,0.4)",
+                }}
+              >
+                <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#ff5f57" }} />
+                <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#ffbd2e" }} />
+                <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#28c840" }} />
+                <span
+                  style={{
+                    marginLeft: "12px",
+                    fontFamily: "JetBrains Mono, monospace",
+                    fontSize: "0.65rem",
+                    color: "var(--text-muted)",
+                    letterSpacing: "0.1em",
+                  }}
+                >
+                  operator@portfolio:~/about_me.txt
+                </span>
+              </div>
+
+              {/* Description Body */}
+              <div style={{ padding: "28px 28px", display: "flex", flexDirection: "column", gap: "16px" }}>
+                <p style={{ color: "var(--text)", lineHeight: 1.7, fontSize: "0.95rem", fontFamily: "Inter, sans-serif" }}>
+                  A{" "}
+                  <span style={{ color: "var(--cyan)", fontFamily: "JetBrains Mono, monospace" }}>
+                    Computer Engineer
+                  </span>{" "}
+                  passionate about building technology that creates real-world impact.
+                  Experienced in developing end-to-end solutions spanning embedded systems, IoT, web applications, cloud services, and machine learning.
+                </p>
+                <p style={{ color: "var(--text-dim)", lineHeight: 1.7, fontSize: "0.95rem", fontFamily: "Inter, sans-serif" }}>
+                  Currently immersed in{" "}
+                  <span style={{ color: "var(--green)", fontFamily: "JetBrains Mono, monospace" }}>
+                    full-stack development
+                  </span>{" "}
+                  and{" "}
+                  <span style={{ color: "var(--green)", fontFamily: "JetBrains Mono, monospace" }}>
+                    IoT engineering
+                  </span>
+                  . Always building, always learning, always open to meaningful collaborations.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
