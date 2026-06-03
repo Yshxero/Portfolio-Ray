@@ -4,6 +4,8 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { site } from "@/data/site";
 import { ChevronDown } from "lucide-react";
+import { scrollToId } from "@/lib/scroll";
+import { logSystemEvent } from "@/lib/logger";
 
 
 const BOOT_LINES = [
@@ -48,6 +50,16 @@ export function Hero() {
   const [history, setHistory] = useState<{ text: string; type: "cmd" | "output" | "error" }[]>([]);
   const contentRef = useRef<HTMLDivElement>(null);
 
+  const handleNavClickSim = (id: string, short: string) => {
+    const navBtn = document.getElementById(`nav-${id}`);
+    if (navBtn) {
+      navBtn.click();
+    } else {
+      logSystemEvent(`Initiating navigation protocol: ${short}`);
+      scrollToId(id);
+    }
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       const cmd = inputValue.trim();
@@ -69,17 +81,17 @@ export function Hero() {
       } else if (baseCmd === "projects") {
         newHistory.push({ text: "Uplink to projects database established. Scrolling...", type: "output" });
         setTimeout(() => {
-          document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
+          handleNavClickSim("projects", "PROJ");
         }, 100);
       } else if (baseCmd === "skills") {
         newHistory.push({ text: "Loading technology stack modules. Scrolling...", type: "output" });
         setTimeout(() => {
-          document.getElementById("skills")?.scrollIntoView({ behavior: "smooth" });
+          handleNavClickSim("skills", "STACK");
         }, 100);
       } else if (baseCmd === "contact") {
         newHistory.push({ text: "Opening secure communication channel. Scrolling...", type: "output" });
         setTimeout(() => {
-          document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+          handleNavClickSim("contact", "SIGNAL");
         }, 100);
       } else if (baseCmd === "clear") {
         setShowBoot(false);
@@ -120,6 +132,15 @@ export function Hero() {
       return () => clearTimeout(t);
     });
   }, []);
+
+  useEffect(() => {
+    if (bootDone) {
+      const t = setTimeout(() => {
+        handleNavClickSim("about", "ABOUT");
+      }, 1200);
+      return () => clearTimeout(t);
+    }
+  }, [bootDone]);
 
 
   useEffect(() => {
@@ -324,35 +345,7 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Pulsing "About Me" scroll down button */}
-        <div
-          style={{
-            marginTop: "40px",
-            opacity: bootDone ? 1 : 0,
-            transform: bootDone ? "none" : "translateY(10px)",
-            transition: "opacity 0.8s ease 0.4s, transform 0.8s ease 0.4s",
-            pointerEvents: bootDone ? "auto" : "none",
-          }}
-        >
-          <button
-            onClick={() => {
-              document.getElementById("about")?.scrollIntoView({ behavior: "smooth" });
-            }}
-            className="btn-primary"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              fontSize: "0.8rem",
-              padding: "0.6rem 1.4rem",
-              borderRadius: "20px",
-              boxShadow: "0 0 15px rgba(0, 212, 255, 0.2)",
-            }}
-          >
-            <span>./about-me.sh</span>
-            <ChevronDown size={14} className="animate-bounce" />
-          </button>
-        </div>
+
       </section>
 
       {/* 2. Profile Details Section (scroll-mt to align below navbar when linked) */}
@@ -401,8 +394,8 @@ export function Hero() {
                 <div
                   style={{
                     position: "relative",
-                    width: "160px",
-                    height: "160px",
+                    width: "192px",
+                    height: "192px",
                     borderRadius: "50%",
                     overflow: "hidden",
                     border: "3px solid var(--bg)",

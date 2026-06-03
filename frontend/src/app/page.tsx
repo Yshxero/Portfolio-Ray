@@ -48,13 +48,13 @@ export default function HomePage() {
         <div className="section-divider" />
 
 
-        <section id="projects" className="scroll-mt-10 min-h-screen">
+        <section id="projects" className="scroll-mt-16 min-h-screen">
           <ChapterHeader
             title="Projects"
             sub="Systems I've architected, built, and deployed"
             command="query --archive=projects"
           />
-          <div className="mx-auto max-w-7xl px-6 pb-16">
+          <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 32px 64px" }}>
             <ProjectsCarousel />
           </div>
         </section>
@@ -109,7 +109,7 @@ function ChapterHeader({
   }, [title]);
 
   return (
-    <div ref={ref} className="mx-auto max-w-7xl px-6 pt-16 pb-10">
+    <div ref={ref} style={{ maxWidth: "1280px", margin: "0 auto", padding: "64px 32px 40px" }}>
       <div
         style={{
           opacity: vis ? 1 : 0,
