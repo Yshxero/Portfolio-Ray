@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Mail, Github, Linkedin, Facebook, ArrowUpRight, Send, MapPin, Clock } from "lucide-react";
 import { site } from "@/data/site";
+import { logSystemEvent } from "@/lib/logger";
 
 
 export function Contact() {
@@ -13,7 +14,13 @@ export function Contact() {
     const el = ref.current;
     if (!el) return;
     const io = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) { setVis(true); io.disconnect(); } },
+      ([e]) => {
+        if (e.isIntersecting) {
+          setVis(true);
+          logSystemEvent("Standing by for secure transmission uplink...");
+          io.disconnect();
+        }
+      },
       { threshold: 0.1 }
     );
     io.observe(el);
@@ -21,7 +28,7 @@ export function Contact() {
   }, []);
 
   return (
-    <div ref={ref} style={{ maxWidth: "1152px", margin: "0 auto", padding: "64px 24px 48px" }}>
+    <div ref={ref} style={{ maxWidth: "1152px", margin: "0 auto", padding: "48px 24px 48px" }}>
 
       <div
         style={{
@@ -38,6 +45,23 @@ export function Contact() {
 
         <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", justifyContent: "space-between", gap: "16px" }}>
           <div>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                fontFamily: "var(--font-mono), JetBrains Mono, monospace",
+                fontSize: "0.72rem",
+                marginBottom: "12px",
+                letterSpacing: "0.05em",
+              }}
+            >
+              <span style={{ color: "var(--green)" }}>operator@portfolio</span>
+              <span style={{ color: "var(--text-muted)" }}>:</span>
+              <span style={{ color: "var(--cyan)" }}>~</span>
+              <span style={{ color: "var(--text-muted)" }}>$</span>
+              <span style={{ color: "var(--text)" }}>establish-link --channel=direct</span>
+            </div>
             <h2
               style={{
                 fontFamily: "Orbitron, sans-serif",
@@ -147,11 +171,13 @@ export function Contact() {
                 onMouseEnter={(e) => {
                   (e.currentTarget as HTMLElement).style.background = "rgba(0,212,255,0.08)";
                   (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,212,255,0.3)";
+                  logSystemEvent(`Target link lock-on: ${label}`);
                 }}
                 onMouseLeave={(e) => {
                   (e.currentTarget as HTMLElement).style.background = "rgba(0,212,255,0.03)";
                   (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,212,255,0.08)";
                 }}
+                onClick={() => logSystemEvent(`Redirecting to node: ${label}`)}
               >
                 <span
                   style={{

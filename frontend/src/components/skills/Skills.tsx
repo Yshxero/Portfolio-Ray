@@ -6,6 +6,7 @@ import type { Group } from "@/types";
 import { FilterPills } from "./FilterPills";
 import { SkillCard } from "./SkillCard";
 import { SkillsOrbit } from "./SkillsOrbit";
+import { logSystemEvent } from "@/lib/logger";
 
 export function Skills() {
   const [active, setActive] = useState<Group>("All");
@@ -17,11 +18,28 @@ export function Skills() {
     return skills.filter((s) => s.group === active);
   }, [active]);
 
+// imports moved to top level
+
+  const firstRender = useRef(true);
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    logSystemEvent(`Active category filter set to: ${active}`);
+  }, [active]);
+
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     const io = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) { setVis(true); io.disconnect(); } },
+      ([e]) => {
+        if (e.isIntersecting) {
+          setVis(true);
+          logSystemEvent("Loading skill_arsenal module... status: OPTIMAL.");
+          io.disconnect();
+        }
+      },
       { threshold: 0.1 }
     );
     io.observe(el);
@@ -40,6 +58,23 @@ export function Skills() {
         }}
       >
 
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            fontFamily: "var(--font-mono), JetBrains Mono, monospace",
+            fontSize: "0.72rem",
+            marginBottom: "12px",
+            letterSpacing: "0.05em",
+          }}
+        >
+          <span style={{ color: "var(--green)" }}>operator@portfolio</span>
+          <span style={{ color: "var(--text-muted)" }}>:</span>
+          <span style={{ color: "var(--cyan)" }}>~</span>
+          <span style={{ color: "var(--text-muted)" }}>$</span>
+          <span style={{ color: "var(--text)" }}>load --module=tech-stack</span>
+        </div>
         <h2
           style={{
             fontFamily: "Orbitron, sans-serif",

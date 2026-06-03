@@ -4,6 +4,7 @@ import { useEffect, useCallback, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { scrollToId } from "@/lib/scroll";
 import { NavLogo } from "./NavLogo";
+import { logSystemEvent } from "@/lib/logger";
 
 const navItems = [
   { id: "home",     label: "About",    short: "INIT"   },
@@ -18,6 +19,10 @@ export function Navbar() {
   const [scrolled,      setScrolled]      = useState(false);
 
   const handleNavClick = useCallback((id: string) => {
+    const item = navItems.find((n) => n.id === id);
+    if (item) {
+      logSystemEvent(`Initiating navigation protocol: ${item.short}`);
+    }
     scrollToId(id);
     setMobileOpen(false);
   }, []);

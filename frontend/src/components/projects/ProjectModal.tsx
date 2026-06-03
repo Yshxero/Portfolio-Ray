@@ -126,6 +126,26 @@ export function ProjectModal({ project, onClose }: Props) {
             {project.title}
           </h3>
 
+          {project.codeName && (
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "12px",
+                fontFamily: "var(--font-mono), JetBrains Mono, monospace",
+                fontSize: "0.65rem",
+                color: "var(--green)",
+                letterSpacing: "0.08em",
+                marginTop: "6px",
+                marginBottom: "4px",
+              }}
+            >
+              <span>MISSION_ID: {project.codeName}</span>
+              <span style={{ color: "var(--text-muted)" }}>|</span>
+              <span style={{ color: "var(--cyan)" }}>STATUS: {project.status || "ACTIVE"}</span>
+            </div>
+          )}
+
 
           <p
             style={{

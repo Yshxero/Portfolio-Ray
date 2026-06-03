@@ -9,6 +9,8 @@ export const projects: Project[] = [
     live: "https://listing-task.vercel.app/",
     tech: ["Next.js", "TypeScript", "Tailwind", "MongoDB", "Node.js", "Express"],
     repo: "https://github.com/Yshxero/Listing-App",
+    codeName: "MISSION_TASK_GRID",
+    status: "DEPLOYED // SECURE",
   },
   {
     title: "CPELEX Mobile App & Embedded System",
@@ -18,6 +20,8 @@ export const projects: Project[] = [
     live: null,
     tech: ["Flutter", "Dart", "Android Studio", "Firebase", "Micropython", "Raspberry Pi", "Sensors"],
     repo: null,
+    codeName: "MISSION_GATEKEEPER",
+    status: "COMPLETED // ARCHIVED",
   },
   {
     title: "Egg-Size Classification System",
@@ -27,15 +31,19 @@ export const projects: Project[] = [
     live: null,
     tech: ["Html", "CSS", "Javascript", "FastAPI", "Python", "Machine Learning", "K-means Clustering"],
     repo: "https://github.com/Yshxero/Egg-Size-Classification.git",
+    codeName: "MISSION_NEURAL_EGG",
+    status: "COMPLETED // REPORT_FILED",
   },
   {
-    title: "TapDrop: A Gcash-Enabled Water Vending Machine & IoT System",
+    title: "TapDrop: A GCash-Enabled Water Vending Machine & IoT System",
     desc: "An IoT-based water vending system that enables cashless payments via GCash while monitoring usage and sensor data in real time.",
     image: "/projects/TapDrop.png",
     pdf: "/pdfs/TAPDROP_ A Gcash-Enabled Water Vending Machine IEEE.pdf",
     live: null,
     tech: ["Html", "CSS", "Javascript", "Firebase", "Micropython", "ESP32", "Sensors"],
     repo: null,
+    codeName: "MISSION_LIQUID_LEDGER",
+    status: "COMPLETED // HARDWARE_STABLE",
   },
   {
     title: "Pahina: A Book Exchange Online Platform",
@@ -45,6 +53,8 @@ export const projects: Project[] = [
     live: null,
     tech: ["Android Studio", "Kotlin", "XML", "Firebase"],
     repo: null,
+    codeName: "MISSION_PAGETURNER",
+    status: "COMPLETED // BACKEND_STABLE",
   },
   {
     title: "Senior Systems — Desktop & Mobile Application",
@@ -54,6 +64,8 @@ export const projects: Project[] = [
     live: null,
     tech: ["Tauri v2", "Next.js", "Rust", "SQLite", "React Native", "Expo", "TypeScript", "Tailwind CSS"],
     repo: null,
+    codeName: "MISSION_OFFLINE_CITIZEN",
+    status: "DEPLOYED // SANDBOXED",
   },
   {
     title: "Password Manager — Desktop App",
@@ -63,6 +75,8 @@ export const projects: Project[] = [
     live: null,
     tech: ["Tauri v2", "Rust", "React 19", "TypeScript", "Vite"],
     repo: null,
+    codeName: "MISSION_CRYPT_CIPHER",
+    status: "COMPLETED // SOURCE_SAFE",
   },
   {
     title: "Scalable Microservices E-commerce Platform",
@@ -72,5 +86,7 @@ export const projects: Project[] = [
     live: null,
     tech: ["Node.js", "Express.js", "TypeScript", "Next.js", "PostgreSQL", "Redis", "Docker", "Nginx"],
     repo: null,
+    codeName: "MISSION_GRID_COMPOSE",
+    status: "DEPLOYED // ACTIVE_NODES",
   },
 ];

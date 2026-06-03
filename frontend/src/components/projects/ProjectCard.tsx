@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { Project } from "@/types";
+import { logSystemEvent } from "@/lib/logger";
 
 type Props = {
   p: Project;
@@ -15,9 +16,14 @@ export function ProjectCard({ p, d, onClick }: Props) {
   const z       = 50 - Math.abs(d);
   const isActive = d === 0;
 
+  const handleClick = () => {
+    logSystemEvent(`Accessing sector: [${p.codeName || p.title.toUpperCase()}]`);
+    onClick();
+  };
+
   return (
     <button
-      onClick={onClick}
+      onClick={handleClick}
       aria-label={`View ${p.title}`}
       style={{
         position: "absolute",
@@ -77,25 +83,24 @@ export function ProjectCard({ p, d, onClick }: Props) {
           />
 
 
-          {isActive && (
-            <div
-              style={{
-                position: "absolute",
-                top: "10px",
-                right: "10px",
-                fontFamily: "JetBrains Mono, monospace",
-                fontSize: "0.6rem",
-                letterSpacing: "0.12em",
-                color: "var(--green)",
-                background: "rgba(5,10,14,0.85)",
-                border: "1px solid rgba(0,255,136,0.25)",
-                borderRadius: "4px",
-                padding: "3px 8px",
-              }}
-            >
-              SELECTED
-            </div>
-          )}
+          <div
+            style={{
+              position: "absolute",
+              top: "10px",
+              right: "10px",
+              fontFamily: "JetBrains Mono, monospace",
+              fontSize: "0.55rem",
+              letterSpacing: "0.1em",
+              color: isActive ? "var(--green)" : "var(--text-muted)",
+              background: "rgba(5,10,14,0.9)",
+              border: isActive ? "1px solid rgba(0,255,136,0.3)" : "1px solid rgba(0,212,255,0.1)",
+              borderRadius: "4px",
+              padding: "3px 8px",
+              zIndex: 15,
+            }}
+          >
+            {p.codeName || "MISSION_ACTIVE"}
+          </div>
         </div>
 
 

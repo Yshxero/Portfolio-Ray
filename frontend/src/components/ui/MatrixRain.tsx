@@ -1,11 +1,20 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const CHARS = "01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホ";
 
 export function MatrixRain() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [opacity, setOpacity] = useState(0.28);
+
+  useEffect(() => {
+    const handleToggle = () => {
+      setOpacity((o) => (o > 0.1 ? 0.05 : 0.28));
+    };
+    window.addEventListener("toggle-matrix", handleToggle);
+    return () => window.removeEventListener("toggle-matrix", handleToggle);
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -65,7 +74,7 @@ export function MatrixRain() {
         position: "fixed",
         inset: 0,
         zIndex: 0,
-        opacity: 0.28,
+        opacity: opacity,
         pointerEvents: "none",
       }}
     />

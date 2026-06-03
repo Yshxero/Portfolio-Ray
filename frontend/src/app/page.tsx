@@ -7,6 +7,7 @@ import { Skills } from "@/components/skills/Skills";
 import { Contact } from "@/components/contact/Contact";
 import { MatrixRain } from "@/components/ui/MatrixRain";
 import { DataStreams } from "@/components/ui/DataStreams";
+import { SystemLogConsole } from "@/components/ui/SystemLogConsole";
 
 export default function HomePage() {
   const [booted, setBooted] = useState(false);
@@ -21,6 +22,7 @@ export default function HomePage() {
 
       <MatrixRain />
       <DataStreams />
+      <SystemLogConsole />
 
 
       <div
@@ -55,6 +57,7 @@ export default function HomePage() {
           <ChapterHeader
             title="Projects"
             sub="Systems I've architected, built, and deployed"
+            command="query --archive=projects"
           />
           <div className="mx-auto max-w-7xl px-6 pb-16">
             <ProjectsCarousel />
@@ -71,7 +74,7 @@ export default function HomePage() {
         <div className="section-divider" />
 
 
-        <section id="contact" className="scroll-mt-10 min-h-screen flex flex-col justify-center">
+        <section id="contact" className="scroll-mt-10 min-h-screen">
           <Contact />
         </section>
       </main>
@@ -79,12 +82,16 @@ export default function HomePage() {
   );
 }
 
+import { logSystemEvent } from "@/lib/logger";
+
 function ChapterHeader({
   title,
   sub,
+  command,
 }: {
   title: string;
   sub: string;
+  command: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [vis, setVis] = useState(false);
@@ -93,12 +100,18 @@ function ChapterHeader({
     const el = ref.current;
     if (!el) return;
     const io = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) { setVis(true); io.disconnect(); } },
+      ([e]) => {
+        if (e.isIntersecting) {
+          setVis(true);
+          logSystemEvent(`Querying database archive: ${title.toLowerCase()}_db...`);
+          io.disconnect();
+        }
+      },
       { threshold: 0.2 }
     );
     io.observe(el);
     return () => io.disconnect();
-  }, []);
+  }, [title]);
 
   return (
     <div ref={ref} className="mx-auto max-w-7xl px-6 pt-16 pb-10">
@@ -109,6 +122,23 @@ function ChapterHeader({
           transition: "opacity 0.7s ease, transform 0.7s ease",
         }}
       >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            fontFamily: "var(--font-mono), JetBrains Mono, monospace",
+            fontSize: "0.72rem",
+            marginBottom: "12px",
+            letterSpacing: "0.05em",
+          }}
+        >
+          <span style={{ color: "var(--green)" }}>operator@portfolio</span>
+          <span style={{ color: "var(--text-muted)" }}>:</span>
+          <span style={{ color: "var(--cyan)" }}>~</span>
+          <span style={{ color: "var(--text-muted)" }}>$</span>
+          <span style={{ color: "var(--text)" }}>{command}</span>
+        </div>
         <h2
           className="font-display text-3xl sm:text-4xl font-bold"
           style={{ color: "var(--text)" }}
@@ -117,7 +147,7 @@ function ChapterHeader({
         </h2>
         <p
           className="mt-2 text-sm"
-          style={{ color: "var(--text-dim)", fontFamily: "JetBrains Mono, monospace" }}
+          style={{ color: "var(--text-dim)", fontFamily: "var(--font-mono), JetBrains Mono, monospace" }}
         >
           {"> "}{sub}
         </p>

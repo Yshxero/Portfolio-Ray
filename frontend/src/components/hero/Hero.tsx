@@ -42,6 +42,71 @@ export function Hero() {
   const [heroVis, setHeroVis] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
 
+  const [inputValue, setInputValue] = useState("");
+  const [showBoot, setShowBoot] = useState(true);
+  const [history, setHistory] = useState<{ text: string; type: "cmd" | "output" | "error" }[]>([]);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      const cmd = inputValue.trim();
+      if (!cmd) return;
+
+      const newHistory = [...history, { text: `ray@portfolio:~$ ${cmd}`, type: "cmd" as const }];
+
+      const parts = cmd.toLowerCase().split(" ");
+      const baseCmd = parts[0];
+
+      if (baseCmd === "help") {
+        newHistory.push({ text: "Available commands:", type: "output" });
+        newHistory.push({ text: "  help          - Display this help briefing", type: "output" });
+        newHistory.push({ text: "  projects      - Query projects archive", type: "output" });
+        newHistory.push({ text: "  skills        - Load technology stack", type: "output" });
+        newHistory.push({ text: "  contact       - Open communication channel", type: "output" });
+        newHistory.push({ text: "  matrix        - Toggle matrix rain streaming", type: "output" });
+        newHistory.push({ text: "  clear         - Clear terminal display", type: "output" });
+      } else if (baseCmd === "projects") {
+        newHistory.push({ text: "Uplink to projects database established. Scrolling...", type: "output" });
+        setTimeout(() => {
+          document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
+        }, 100);
+      } else if (baseCmd === "skills") {
+        newHistory.push({ text: "Loading technology stack modules. Scrolling...", type: "output" });
+        setTimeout(() => {
+          document.getElementById("skills")?.scrollIntoView({ behavior: "smooth" });
+        }, 100);
+      } else if (baseCmd === "contact") {
+        newHistory.push({ text: "Opening secure communication channel. Scrolling...", type: "output" });
+        setTimeout(() => {
+          document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+        }, 100);
+      } else if (baseCmd === "clear") {
+        setShowBoot(false);
+        setHistory([]);
+        setInputValue("");
+        return;
+      } else if (baseCmd === "matrix") {
+        window.dispatchEvent(new CustomEvent("toggle-matrix"));
+        newHistory.push({ text: "Matrix rain streaming toggled.", type: "output" });
+      } else if (baseCmd === "sudo" && parts[1] === "root") {
+        newHistory.push({ text: "ACCESS GRANTED. Welcome back, Operator Ray.", type: "output" });
+      } else {
+        newHistory.push({ text: `bash: ${cmd}: command not found`, type: "error" });
+      }
+
+      setHistory(newHistory);
+      setInputValue("");
+    }
+  };
+
+  useEffect(() => {
+    const el = contentRef.current;
+    if (el) {
+      el.scrollTop = el.scrollHeight;
+    }
+  }, [history, visibleLines]);
+
+
 
   useEffect(() => {
     BOOT_LINES.forEach((line, i) => {
@@ -168,8 +233,17 @@ export function Hero() {
             </div>
 
 
-            <div style={{ padding: "16px 20px", minHeight: "260px" }}>
-              {BOOT_LINES.map((line, i) => (
+            <div
+              ref={contentRef}
+              style={{
+                padding: "16px 20px",
+                minHeight: "260px",
+                maxHeight: "300px",
+                overflowY: "auto",
+                scrollbarWidth: "thin",
+              }}
+            >
+              {showBoot && BOOT_LINES.map((line, i) => (
                 <div
                   key={i}
                   style={{
@@ -194,6 +268,24 @@ export function Hero() {
                 </div>
               ))}
 
+              {history.map((h, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    display: "flex",
+                    alignItems: "baseline",
+                    gap: "8px",
+                    marginBottom: "4px",
+                    fontFamily: "JetBrains Mono, monospace",
+                    fontSize: "0.72rem",
+                    lineHeight: 1.6,
+                    color: h.type === "error" ? "var(--amber)" : h.type === "cmd" ? "rgba(226,234,245,0.85)" : "var(--cyan)",
+                    whiteSpace: "pre-wrap",
+                  }}
+                >
+                  <span>{h.text}</span>
+                </div>
+              ))}
 
               <div
                 style={{
@@ -211,16 +303,25 @@ export function Hero() {
                 <span style={{ color: "var(--text-muted)" }}>:</span>
                 <span style={{ color: "var(--cyan)" }}>~</span>
                 <span style={{ color: "var(--text-muted)" }}>$</span>
-                <span style={{ color: "var(--text)" }}> cat about.md</span>
-                <span
+                <input
+                  type="text"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  disabled={!bootDone}
                   style={{
-                    width: "7px",
-                    height: "13px",
-                    background: "var(--green)",
-                    borderRadius: "1px",
-                    animation: "blink 1s step-end infinite",
-                    boxShadow: "0 0 6px rgba(0,255,136,0.7)",
+                    background: "none",
+                    border: "none",
+                    outline: "none",
+                    color: "var(--text)",
+                    fontFamily: "JetBrains Mono, monospace",
+                    fontSize: "0.72rem",
+                    flex: 1,
+                    padding: 0,
+                    margin: 0,
+                    caretColor: "var(--green)",
                   }}
+                  autoComplete="off"
                 />
               </div>
             </div>

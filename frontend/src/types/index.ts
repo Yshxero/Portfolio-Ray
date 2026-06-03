@@ -19,6 +19,8 @@ export type Project = {
   live: string | null;
   tech: string[];
   repo?: string | null;
+  codeName?: string;
+  status?: string;
 };
 
 export type Skill = {
