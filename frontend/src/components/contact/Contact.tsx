@@ -3,7 +3,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Mail, Github, Linkedin, Facebook, ArrowUpRight, Send, MapPin, Clock } from "lucide-react";
 import { site } from "@/data/site";
-import { logSystemEvent } from "@/lib/logger";
 
 
 export function Contact() {
@@ -17,7 +16,6 @@ export function Contact() {
       ([e]) => {
         if (e.isIntersecting) {
           setVis(true);
-          logSystemEvent("Standing by for secure transmission uplink...");
           io.disconnect();
         }
       },
@@ -171,13 +169,11 @@ export function Contact() {
                 onMouseEnter={(e) => {
                   (e.currentTarget as HTMLElement).style.background = "rgba(0,212,255,0.08)";
                   (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,212,255,0.3)";
-                  logSystemEvent(`Target link lock-on: ${label}`);
                 }}
                 onMouseLeave={(e) => {
                   (e.currentTarget as HTMLElement).style.background = "rgba(0,212,255,0.03)";
                   (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,212,255,0.08)";
                 }}
-                onClick={() => logSystemEvent(`Redirecting to node: ${label}`)}
               >
                 <span
                   style={{

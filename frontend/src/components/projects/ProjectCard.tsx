@@ -1,6 +1,5 @@
 import Image from "next/image";
 import type { Project } from "@/types";
-import { logSystemEvent } from "@/lib/logger";
 
 type Props = {
   p: Project;
@@ -16,14 +15,11 @@ export function ProjectCard({ p, d, onClick }: Props) {
   const z       = 50 - Math.abs(d);
   const isActive = d === 0;
 
-  const handleClick = () => {
-    logSystemEvent(`Accessing sector: [${p.codeName || p.title.toUpperCase()}]`);
-    onClick();
-  };
+
 
   return (
     <button
-      onClick={handleClick}
+      onClick={onClick}
       aria-label={`View ${p.title}`}
       style={{
         position: "absolute",
@@ -72,7 +68,7 @@ export function ProjectCard({ p, d, onClick }: Props) {
         )}
 
 
-        <div style={{ position: "relative", height: "180px", background: "var(--bg)" }}>
+        <div style={{ position: "relative", height: "220px", background: "var(--bg)" }}>
           <Image src={p.image} alt={p.title} fill className="object-cover" />
           <div
             style={{

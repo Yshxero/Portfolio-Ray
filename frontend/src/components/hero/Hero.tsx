@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from "react";
 import { site } from "@/data/site";
 import { ChevronDown } from "lucide-react";
 import { scrollToId } from "@/lib/scroll";
-import { logSystemEvent } from "@/lib/logger";
 
 
 const BOOT_LINES = [
@@ -55,7 +54,6 @@ export function Hero() {
     if (navBtn) {
       navBtn.click();
     } else {
-      logSystemEvent(`Initiating navigation protocol: ${short}`);
       scrollToId(id);
     }
   };
@@ -409,6 +407,7 @@ export function Hero() {
                     alt="Ray Simon Bantaculo"
                     fill
                     className="object-cover"
+                    style={{ objectPosition: "top" }}
                     priority
                   />
                 </div>
@@ -491,74 +490,84 @@ export function Hero() {
               </div>
             </div>
 
-            {/* Statistics */}
+            {/* Statistics + Actions side by side */}
             <div
               style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
+                display: "flex",
+                alignItems: "stretch",
                 gap: "8px",
               }}
             >
-              {STATS.map((s) => (
-                <div
-                  key={s.label}
-                  style={{
-                    background: "rgba(10,21,32,0.8)",
-                    border: "1px solid rgba(0,212,255,0.1)",
-                    borderRadius: "6px",
-                    padding: "12px 8px",
-                    textAlign: "center",
-                    transition: "border-color 0.3s",
-                  }}
-                  className="card-ce"
-                >
+              {/* Stats */}
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(3, 1fr)",
+                  gap: "8px",
+                  flex: 1,
+                }}
+              >
+                {STATS.map((s) => (
                   <div
+                    key={s.label}
                     style={{
-                      fontFamily: "Orbitron, sans-serif",
-                      fontSize: "1.1rem",
-                      fontWeight: 700,
-                      color: s.color,
-                      textShadow: `0 0 12px ${s.color}`,
+                      background: "rgba(10,21,32,0.8)",
+                      border: "1px solid rgba(0,212,255,0.1)",
+                      borderRadius: "6px",
+                      padding: "12px 8px",
+                      textAlign: "center",
+                      transition: "border-color 0.3s",
                     }}
+                    className="card-ce"
                   >
-                    {s.value}
+                    <div
+                      style={{
+                        fontFamily: "Orbitron, sans-serif",
+                        fontSize: "1.1rem",
+                        fontWeight: 700,
+                        color: s.color,
+                        textShadow: `0 0 12px ${s.color}`,
+                      }}
+                    >
+                      {s.value}
+                    </div>
+                    <div
+                      style={{
+                        fontFamily: "JetBrains Mono, monospace",
+                        fontSize: "0.55rem",
+                        color: "var(--text-muted)",
+                        letterSpacing: "0.08em",
+                        marginTop: "4px",
+                        lineHeight: 1.3,
+                      }}
+                    >
+                      {s.label}
+                    </div>
                   </div>
-                  <div
-                    style={{
-                      fontFamily: "JetBrains Mono, monospace",
-                      fontSize: "0.55rem",
-                      color: "var(--text-muted)",
-                      letterSpacing: "0.08em",
-                      marginTop: "4px",
-                      lineHeight: 1.3,
-                    }}
-                  >
-                    {s.label}
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
 
-            {/* Resume/Contact Actions */}
-            <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
-              <a
-                href={site.cv}
-                target="_blank"
-                rel="noreferrer"
-                id="hero-view-resume"
-                className="btn-primary"
-                style={{ textDecoration: "none" }}
-              >
-                ./view-resume.sh
-              </a>
-              <a
-                href="#contact"
-                id="hero-contact"
-                className="btn-secondary"
-                style={{ textDecoration: "none" }}
-              >
-                PING ME
-              </a>
+              {/* Resume/Contact Actions */}
+              <div style={{ display: "flex", flexDirection: "column", gap: "8px", justifyContent: "stretch" }}>
+                <a
+                  href={site.cv}
+                  target="_blank"
+                  rel="noreferrer"
+                  id="hero-view-resume"
+                  className="btn-primary"
+                  style={{ textDecoration: "none", textAlign: "center", flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}
+                >
+                  ./view-resume.sh
+                </a>
+                <a
+                  href="#contact"
+                  id="hero-contact"
+                  className="btn-secondary"
+                  style={{ textDecoration: "none", textAlign: "center", flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}
+                >
+                  PING ME
+                </a>
+              </div>
             </div>
           </div>
 

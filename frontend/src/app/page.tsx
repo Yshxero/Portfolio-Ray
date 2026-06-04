@@ -7,7 +7,6 @@ import { Skills } from "@/components/skills/Skills";
 import { Contact } from "@/components/contact/Contact";
 import { MatrixRain } from "@/components/ui/MatrixRain";
 import { DataStreams } from "@/components/ui/DataStreams";
-import { SystemLogConsole } from "@/components/ui/SystemLogConsole";
 
 export default function HomePage() {
   const [booted, setBooted] = useState(false);
@@ -22,7 +21,6 @@ export default function HomePage() {
 
       <MatrixRain />
       <DataStreams />
-      <SystemLogConsole />
 
 
       <div
@@ -77,7 +75,6 @@ export default function HomePage() {
   );
 }
 
-import { logSystemEvent } from "@/lib/logger";
 
 function ChapterHeader({
   title,
@@ -98,7 +95,6 @@ function ChapterHeader({
       ([e]) => {
         if (e.isIntersecting) {
           setVis(true);
-          logSystemEvent(`Querying database archive: ${title.toLowerCase()}_db...`);
           io.disconnect();
         }
       },
