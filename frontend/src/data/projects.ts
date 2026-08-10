@@ -11,6 +11,8 @@ export const projects: Project[] = [
     repo: null,
     codeName: "MISSION_REMO_RAG",
     status: "DEPLOYED // ACTIVE_NODES",
+    category: "AI & RAG",
+    highlight: "⚡ Hybrid Dense/Sparse Qdrant Vector Search",
   },
   {
     title: "CropWise — AI Agricultural Platform & ML Microservices",
@@ -22,6 +24,8 @@ export const projects: Project[] = [
     repo: null,
     codeName: "MISSION_CROPWISE_ECOSYSTEM",
     status: "DEPLOYED // ACTIVE_NODES",
+    category: "AI & RAG",
+    highlight: "🌾 Bilingual ML Crop & Soil Recommendations",
   },
   {
     title: "Senior Systems — Desktop & Mobile Application",
@@ -33,6 +37,8 @@ export const projects: Project[] = [
     repo: null,
     codeName: "MISSION_OFFLINE_CITIZEN",
     status: "DEPLOYED // SANDBOXED",
+    category: "Rust & Systems",
+    highlight: "🔒 100% Offline Zero-Trust Tauri v2 + Rust Architecture",
   },
   {
     title: "Password Manager — Encrypted Desktop Vault",
@@ -44,6 +50,8 @@ export const projects: Project[] = [
     repo: null,
     codeName: "MISSION_CRYPT_CIPHER",
     status: "COMPLETED // SOURCE_SAFE",
+    category: "Rust & Systems",
+    highlight: "🔐 Argon2 & ChaCha20-Poly1305 Cryptographic Vault",
   },
   {
     title: "Scalable Microservices E-commerce Platform",
@@ -55,6 +63,8 @@ export const projects: Project[] = [
     repo: null,
     codeName: "MISSION_GRID_COMPOSE",
     status: "DEPLOYED // ACTIVE_NODES",
+    category: "Full-Stack",
+    highlight: "🐳 Distributed Microservices & Nginx API Gateway",
   },
   {
     title: "TapDrop: GCash-Enabled Water Vending Machine & IoT System",
@@ -66,21 +76,12 @@ export const projects: Project[] = [
     repo: null,
     codeName: "MISSION_LIQUID_LEDGER",
     status: "COMPLETED // HARDWARE_STABLE",
+    category: "IoT & Hardware",
+    highlight: "📡 ESP32 Telemetry & Cashless GCash Payment API",
   },
 ];
 
 export const archiveProjects: Project[] = [
-  {
-    title: "ResumeTailor AI — Intelligent Resume Generator",
-    desc: "An AI-powered ATS-optimized resume tailoring platform that customizes resumes to targeted job descriptions with dynamic LaTeX compilation, ATS scoring, BullMQ queueing, and Cloudflare R2 storage.",
-    image: "/projects/resume-tailor.png",
-    pdf: null,
-    live: null,
-    tech: ["Next.js", "Express.js", "TypeScript", "PostgreSQL", "Redis", "BullMQ", "Gemini AI", "LaTeX", "Docker"],
-    repo: null,
-    codeName: "MISSION_RESUME_TAILOR",
-    status: "DEPLOYED // SECURE",
-  },
   {
     title: "CPELEX Mobile App & Embedded System",
     desc: "A mobile and embedded toll gate system automating vehicle access and payment via sensor hardware integration, Raspberry Pi microcontrollers, and real-time Flutter app control.",
@@ -91,6 +92,8 @@ export const archiveProjects: Project[] = [
     repo: null,
     codeName: "MISSION_GATEKEEPER",
     status: "COMPLETED // ARCHIVED",
+    category: "IoT & Hardware",
+    highlight: "🚗 Raspberry Pi Microcontroller & Flutter Integration",
   },
   {
     title: "Egg-Size Classification System",
@@ -102,6 +105,8 @@ export const archiveProjects: Project[] = [
     repo: "https://github.com/Yshxero/Egg-Size-Classification.git",
     codeName: "MISSION_NEURAL_EGG",
     status: "COMPLETED // REPORT_FILED",
+    category: "AI & RAG",
+    highlight: "🥚 K-Means Computer Vision Quality Classifier",
   },
   {
     title: "App Release Management System (ARMS) API",
@@ -113,6 +118,8 @@ export const archiveProjects: Project[] = [
     repo: "https://github.com/mrkurtt/arms-api",
     codeName: "MISSION_ARMS_API",
     status: "COMPLETED // SOURCE_SAFE",
+    category: "Full-Stack",
+    highlight: "🛡️ Express v5, Zod Validation & Vitest Test Suite",
   },
   {
     title: "E-Commerce AI & Workflow Automation Suite",
@@ -124,6 +131,8 @@ export const archiveProjects: Project[] = [
     repo: null,
     codeName: "MISSION_N8N_FLOW",
     status: "DEPLOYED // AUTOMATED",
+    category: "AI & RAG",
+    highlight: "🔄 Enterprise n8n & Autonomous AI Agent Workflows",
   },
   {
     title: "Digitals — AI Storybook & Digital Product Creator",
@@ -135,6 +144,8 @@ export const archiveProjects: Project[] = [
     repo: null,
     codeName: "MISSION_DIGITAL_STORYBOOK",
     status: "COMPLETED // CREATIVE_ONLINE",
+    category: "AI & RAG",
+    highlight: "📖 Google Gemini Narrative & Diffusion Image Generation",
   },
   {
     title: "Google Docs ➔ Discord Task Automation Bot",
@@ -146,6 +157,8 @@ export const archiveProjects: Project[] = [
     repo: null,
     codeName: "MISSION_REMO_BOT",
     status: "DEPLOYED // SECURE",
+    category: "Full-Stack",
+    highlight: "🤖 Ed25519 Signed Webhook & Real-Time Discord Logs",
   },
   {
     title: "Listing App",
@@ -157,6 +170,7 @@ export const archiveProjects: Project[] = [
     repo: "https://github.com/Yshxero/Listing-App",
     codeName: "MISSION_TASK_GRID",
     status: "DEPLOYED // SECURE",
+    category: "Full-Stack",
   },
   {
     title: "Pahina: Book Exchange Platform",
@@ -168,6 +182,7 @@ export const archiveProjects: Project[] = [
     repo: null,
     codeName: "MISSION_PAGETURNER",
     status: "COMPLETED // ARCHIVED",
+    category: "Full-Stack",
   },
   {
     title: "FitPlan — Workout & Fitness Tracker",
@@ -179,5 +194,6 @@ export const archiveProjects: Project[] = [
     repo: null,
     codeName: "MISSION_FIT_PLAN",
     status: "COMPLETED // ARCHIVED",
+    category: "Full-Stack",
   },
 ];

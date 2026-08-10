@@ -146,6 +146,24 @@ export function ProjectModal({ project, onClose }: Props) {
             </div>
           )}
 
+          {project.highlight && (
+            <div
+              style={{
+                marginTop: "10px",
+                fontFamily: "JetBrains Mono, monospace",
+                fontSize: "0.72rem",
+                color: "var(--green)",
+                background: "rgba(0,255,136,0.08)",
+                border: "1px solid rgba(0,255,136,0.25)",
+                borderRadius: "6px",
+                padding: "8px 12px",
+                letterSpacing: "0.03em",
+                display: "inline-block",
+              }}
+            >
+              {project.highlight}
+            </div>
+          )}
 
           <p
             style={{

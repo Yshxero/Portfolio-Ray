@@ -11,6 +11,8 @@ export type Group =
   | "Data / ML"
   | "Other Tools";
 
+export type ProjectCategory = "All" | "AI & RAG" | "Rust & Systems" | "IoT & Hardware" | "Full-Stack";
+
 export type Project = {
   title: string;
   desc: string;
@@ -21,6 +23,8 @@ export type Project = {
   repo?: string | null;
   codeName?: string;
   status?: string;
+  category?: ProjectCategory;
+  highlight?: string;
 };
 
 export type Skill = {

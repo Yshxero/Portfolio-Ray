@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Hero } from "@/components/hero/Hero";
 import { ProjectsCarousel } from "@/components/projects/ProjectsCarousel";
 import { Skills } from "@/components/skills/Skills";

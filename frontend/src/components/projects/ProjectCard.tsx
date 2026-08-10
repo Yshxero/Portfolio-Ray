@@ -135,6 +135,24 @@ export function ProjectCard({ p, d, onClick }: Props) {
           </p>
 
 
+          {p.highlight && (
+            <div
+              style={{
+                marginTop: "10px",
+                fontFamily: "JetBrains Mono, monospace",
+                fontSize: "0.62rem",
+                color: "var(--green)",
+                background: "rgba(0,255,136,0.07)",
+                border: "1px solid rgba(0,255,136,0.2)",
+                borderRadius: "4px",
+                padding: "4px 8px",
+                letterSpacing: "0.02em",
+              }}
+            >
+              {p.highlight}
+            </div>
+          )}
+
           <div style={{ marginTop: "12px", display: "flex", flexWrap: "wrap", gap: "5px" }}>
             {p.tech.slice(0, 5).map((t) => (
               <span key={t} className="badge-tech">{t}</span>

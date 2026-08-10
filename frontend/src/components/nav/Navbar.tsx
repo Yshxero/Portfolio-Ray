@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useCallback, useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Command, Search } from "lucide-react";
 import { scrollToId } from "@/lib/scroll";
 import { NavLogo } from "./NavLogo";
+import { CommandPalette } from "@/components/ui/CommandPalette";
 
 const navItems = [
   { id: "home",     label: "About",    short: "ABOUT"  },
@@ -15,6 +16,7 @@ const navItems = [
 export function Navbar() {
   const [activeSection, setActiveSection] = useState<string>("home");
   const [mobileOpen,    setMobileOpen]    = useState(false);
+  const [cmdOpen,       setCmdOpen]       = useState(false);
   const [scrolled,      setScrolled]      = useState(false);
 
   const handleNavClick = useCallback((id: string) => {
@@ -57,6 +59,7 @@ export function Navbar() {
 
   return (
     <>
+      <CommandPalette open={cmdOpen} onClose={() => setCmdOpen(false)} />
       <nav
         style={{
           position: "fixed",
@@ -87,7 +90,7 @@ export function Navbar() {
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: "64px" }}>
             <NavLogo onClick={() => handleNavClick("home")} />
 
-            <div style={{ display: "flex", alignItems: "center", gap: "4px" }} className="hidden md:flex">
+            <div style={{ display: "flex", alignItems: "center", gap: "12px" }} className="hidden md:flex">
               {navItems.map((item) => {
                 const isActive = activeSection === item.id;
                 return (
@@ -133,6 +136,29 @@ export function Navbar() {
                   </button>
                 );
               })}
+
+              <button
+                onClick={() => setCmdOpen(true)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  padding: "5px 10px",
+                  borderRadius: "4px",
+                  border: "1px solid rgba(0,212,255,0.2)",
+                  background: "rgba(0,212,255,0.05)",
+                  color: "var(--cyan)",
+                  cursor: "pointer",
+                  fontFamily: "JetBrains Mono, monospace",
+                  fontSize: "0.7rem",
+                  transition: "all 0.2s",
+                  marginLeft: "8px",
+                }}
+                title="Search or run command (Ctrl+K / Cmd+K)"
+              >
+                <Search size={12} />
+                <span>CMD + K</span>
+              </button>
             </div>
 
             <button
