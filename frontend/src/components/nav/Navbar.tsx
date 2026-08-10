@@ -6,7 +6,7 @@ import { scrollToId } from "@/lib/scroll";
 import { NavLogo } from "./NavLogo";
 
 const navItems = [
-  { id: "about",    label: "About",    short: "ABOUT"  },
+  { id: "home",     label: "About",    short: "ABOUT"  },
   { id: "projects", label: "Projects", short: "PROJ"   },
   { id: "skills",   label: "Skills",   short: "STACK"  },
   { id: "contact",  label: "Contact",  short: "SIGNAL" },

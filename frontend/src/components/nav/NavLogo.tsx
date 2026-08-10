@@ -3,47 +3,29 @@
 import { useEffect, useState } from "react";
 
 const BOOT_SEQUENCE = [
-  "BOOTING...",
   "SYS_INIT...",
-  "LOADING...",
-  "RAY.EXE",
+  "RAY.SIMON",
 ];
 
 const LOGO_TEXT = "RAY.SIMON";
-const TYPE_SPEED = 80;
+const TYPE_SPEED = 50;
 
 type Props = { onClick: () => void };
 
 export function NavLogo({ onClick }: Props) {
   const [phase, setPhase]   = useState(0);
-  const [typed, setTyped]   = useState("");
-  const [done,  setDone]    = useState(false);
-
-
-  useEffect(() => {
-    if (phase < BOOT_SEQUENCE.length - 1) {
-      const t = setTimeout(() => setPhase((p) => p + 1), 280);
-      return () => clearTimeout(t);
-    }
-  }, [phase]);
-
+  const [typed, setTyped]   = useState("RAY.SIMON");
+  const [done,  setDone]    = useState(true);
 
   useEffect(() => {
-    if (phase < BOOT_SEQUENCE.length - 1) return;
-    if (typed.length >= LOGO_TEXT.length) {
-      setDone(true);
-      return;
-    }
-    const t = setTimeout(
-      () => setTyped(LOGO_TEXT.slice(0, typed.length + 1)),
-      TYPE_SPEED
-    );
+    // Fast boot sequence
+    const t = setTimeout(() => {
+      setPhase(1);
+    }, 150);
     return () => clearTimeout(t);
-  }, [phase, typed]);
+  }, []);
 
-  const currentLabel = phase < BOOT_SEQUENCE.length - 1
-    ? BOOT_SEQUENCE[phase]
-    : typed;
+  const currentLabel = phase === 0 ? "RAY.SIMON" : LOGO_TEXT;
 
   return (
     <button

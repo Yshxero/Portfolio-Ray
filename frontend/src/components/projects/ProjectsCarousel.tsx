@@ -1,44 +1,45 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { projects } from "@/data/projects";
+import { projects, archiveProjects } from "@/data/projects";
 import { ProjectCard } from "./ProjectCard";
 import { ProjectModal } from "./ProjectModal";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ExternalLink, Github, FileText } from "lucide-react";
+import type { Project } from "@/types";
 
 function mod(n: number, m: number) {
   return ((n % m) + m) % m;
 }
 
 export function ProjectsCarousel() {
-  const [active,  setActive]  = useState(0);
-  const [paused,  setPaused]  = useState(false);
-  const [open,    setOpen]    = useState(false);
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   const total = projects.length;
   const gor = useCallback(() => setActive((a) => mod(a + 1, total)), [total]);
   const gol = useCallback(() => setActive((a) => mod(a - 1, total)), [total]);
 
   useEffect(() => {
-    if (paused || open) return;
+    if (paused || selectedProject !== null) return;
     const id = window.setInterval(gor, 4000);
     return () => window.clearInterval(id);
-  }, [paused, open, gor]);
+  }, [paused, selectedProject, gor]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape")      setOpen(false);
-      if (e.key === "ArrowLeft")   gol();
-      if (e.key === "ArrowRight")  gor();
-      if (e.key === "Enter")       setOpen(true);
+      if (e.key === "Escape") setSelectedProject(null);
+      if (e.key === "ArrowLeft") gol();
+      if (e.key === "ArrowRight") gor();
+      if (e.key === "Enter" && !selectedProject) setSelectedProject(projects[active]);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [gol, gor]);
+  }, [gol, gor, active, selectedProject]);
 
   const distance = (i: number) => {
     let d = i - active;
-    if (d >  total / 2) d -= total;
+    if (d > total / 2) d -= total;
     if (d < -total / 2) d += total;
     return d;
   };
@@ -64,7 +65,7 @@ export function ProjectsCarousel() {
           }}
         >
           <span style={{ color: "var(--text-muted)", letterSpacing: "0.1em" }}>
-            MISSION {String(active + 1).padStart(2, "0")}/{String(total).padStart(2, "0")}
+            FLAGSHIP MISSION {String(active + 1).padStart(2, "0")}/{String(total).padStart(2, "0")}
           </span>
           <div style={{ flex: 1, height: "1px", background: "rgba(0,212,255,0.1)" }}>
             <div
@@ -209,7 +210,7 @@ export function ProjectsCarousel() {
                 p={proj}
                 d={distance(i)}
                 onClick={() => {
-                  if (i === active) setOpen(true);
+                  if (i === active) setSelectedProject(proj);
                   else setActive(i);
                 }}
               />
@@ -250,7 +251,85 @@ export function ProjectsCarousel() {
         </div>
       </div>
 
-      {open && <ProjectModal project={projects[active]} onClose={() => setOpen(false)} />}
+      <div style={{ marginTop: "72px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "24px" }}>
+          <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: "0.8rem", color: "var(--cyan)", letterSpacing: "0.1em" }}>
+            [ AUXILIARY MISSIONS & ARCHIVE ]
+          </span>
+          <div style={{ flex: 1, height: "1px", background: "rgba(0,212,255,0.15)" }} />
+          <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: "0.7rem", color: "var(--text-muted)" }}>
+            {archiveProjects.length} RECORDS
+          </span>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "20px" }}>
+          {archiveProjects.map((ap) => (
+            <div
+              key={ap.title}
+              onClick={() => setSelectedProject(ap)}
+              style={{
+                background: "rgba(10,21,32,0.7)",
+                border: "1px solid rgba(0,212,255,0.12)",
+                borderRadius: "8px",
+                padding: "20px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                cursor: "pointer",
+                transition: "all 0.25s ease",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,212,255,0.4)";
+                (e.currentTarget as HTMLElement).style.transform = "translateY(-3px)";
+                (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 24px rgba(0,212,255,0.08)";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,212,255,0.12)";
+                (e.currentTarget as HTMLElement).style.transform = "none";
+                (e.currentTarget as HTMLElement).style.boxShadow = "none";
+              }}
+            >
+              <div>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "8px" }}>
+                  <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: "0.6rem", color: "var(--green)", letterSpacing: "0.08em" }}>
+                    {ap.codeName || "ARCHIVE"}
+                  </span>
+                  <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: "0.6rem", color: "var(--text-muted)" }}>
+                    {ap.status || "COMPLETED"}
+                  </span>
+                </div>
+                <h4 style={{ fontFamily: "Orbitron, JetBrains Mono, monospace", fontSize: "0.9rem", fontWeight: 700, color: "var(--text)", marginBottom: "8px" }}>
+                  {ap.title}
+                </h4>
+                <p style={{ fontSize: "0.78rem", color: "var(--text-dim)", lineHeight: 1.5, fontFamily: "Inter, sans-serif", marginBottom: "16px" }}>
+                  {ap.desc}
+                </p>
+              </div>
+
+              <div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "4px", marginBottom: "16px" }}>
+                  {ap.tech.map((t) => (
+                    <span key={t} className="badge-tech" style={{ fontSize: "0.6rem", padding: "2px 6px" }}>{t}</span>
+                  ))}
+                </div>
+
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: "12px", borderTop: "1px solid rgba(0,212,255,0.08)" }}>
+                  <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: "0.65rem", color: "var(--cyan)" }}>
+                    VIEW DETAILS →
+                  </span>
+                  <div style={{ display: "flex", gap: "8px" }}>
+                    {ap.repo && <Github size={14} style={{ color: "var(--text-muted)" }} />}
+                    {ap.live && <ExternalLink size={14} style={{ color: "var(--text-muted)" }} />}
+                    {ap.pdf && <FileText size={14} style={{ color: "var(--text-muted)" }} />}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {selectedProject && <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />}
     </>
   );
 }

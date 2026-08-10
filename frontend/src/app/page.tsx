@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Hero } from "@/components/hero/Hero";
 import { ProjectsCarousel } from "@/components/projects/ProjectsCarousel";
 import { Skills } from "@/components/skills/Skills";
@@ -9,12 +9,6 @@ import { MatrixRain } from "@/components/ui/MatrixRain";
 import { DataStreams } from "@/components/ui/DataStreams";
 
 export default function HomePage() {
-  const [booted, setBooted] = useState(false);
-
-  useEffect(() => {
-    const t = setTimeout(() => setBooted(true), 100);
-    return () => clearTimeout(t);
-  }, []);
 
   return (
     <div className="relative min-h-screen" style={{ background: "var(--bg)", position: "relative", zIndex: 2 }}>
@@ -35,8 +29,6 @@ export default function HomePage() {
         className="relative"
         style={{
           zIndex: 2,
-          opacity: booted ? 1 : 0,
-          transition: "opacity 0.6s ease",
         }}
       >
 
