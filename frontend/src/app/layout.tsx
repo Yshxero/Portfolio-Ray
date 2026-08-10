@@ -10,9 +10,43 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Ray Simon Bantaculo — Computer Engineer & Developer",
-  description: "Portfolio of Ray Simon Bantaculo — Computer Engineering student specializing in full-stack development, IoT systems, and embedded engineering. Building the future one system at a time.",
-  keywords: ["Computer Engineering", "Full Stack Developer", "IoT", "Embedded Systems", "Portfolio"],
+  title: {
+    default: "Ray Simon Bantaculo | Computer Engineer & Full-Stack Developer",
+    template: "%s | Ray Simon Bantaculo",
+  },
+  description:
+    "Official portfolio of Ray Simon Bantaculo — Computer Engineer specializing in Full-Stack Development, IoT Systems, Rust Desktop Apps, and Multimodal AI/RAG Architectures.",
+  keywords: [
+    "Ray Simon Bantaculo",
+    "Ray Simon",
+    "Bantaculo",
+    "Computer Engineer",
+    "Full-Stack Developer",
+    "IoT Systems Engineer",
+    "Rust Developer",
+    "Tauri",
+    "FastAPI",
+    "Next.js Portfolio",
+  ],
+  authors: [{ name: "Ray Simon Bantaculo" }],
+  creator: "Ray Simon Bantaculo",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    title: "Ray Simon Bantaculo | Computer Engineer & Full-Stack Developer",
+    description:
+      "Full-Stack, IoT Systems, Rust Desktop & AI/RAG Engineer. Explore interactive portfolio, projects, and tech stack.",
+    siteName: "Ray Simon Bantaculo Portfolio",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Ray Simon Bantaculo | Computer Engineer & Developer",
+    description: "Computer Engineer specializing in Full-Stack, IoT Systems, and AI Architectures.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
