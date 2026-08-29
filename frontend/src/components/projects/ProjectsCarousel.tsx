@@ -1,29 +1,57 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import Image from "next/image";
 import { projects, archiveProjects } from "@/data/projects";
-import { ProjectCard } from "./ProjectCard";
 import { ProjectModal } from "./ProjectModal";
-import { ChevronLeft, ChevronRight, ExternalLink, Github, FileText, Filter } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ExternalLink,
+  Github,
+  FileText,
+  Filter,
+  ArrowRight,
+} from "lucide-react";
 import type { Project, ProjectCategory } from "@/types";
+
+/* ── helpers ─────────────────────────────── */
 
 function mod(n: number, m: number) {
   return ((n % m) + m) % m;
 }
 
 const CATEGORIES: { label: ProjectCategory; icon: string }[] = [
-  { label: "All", icon: "🌐" },
-  { label: "AI & RAG", icon: "🤖" },
-  { label: "Rust & Systems", icon: "⚙️" },
-  { label: "IoT & Hardware", icon: "🔌" },
-  { label: "Full-Stack", icon: "💻" },
+  { label: "All", icon: "◉" },
+  { label: "AI & RAG", icon: "⟡" },
+  { label: "Rust & Systems", icon: "⚙" },
+  { label: "IoT & Hardware", icon: "◈" },
+  { label: "Full-Stack", icon: "⬡" },
 ];
+
+function getCategoryAccent(cat?: string) {
+  switch (cat) {
+    case "AI & RAG":
+      return { color: "var(--cat-ai)", dim: "var(--cat-ai-dim)", border: "var(--cat-ai-border)" };
+    case "Rust & Systems":
+      return { color: "var(--cat-rust)", dim: "var(--cat-rust-dim)", border: "var(--cat-rust-border)" };
+    case "IoT & Hardware":
+      return { color: "var(--cat-iot)", dim: "var(--cat-iot-dim)", border: "var(--cat-iot-border)" };
+    case "Full-Stack":
+      return { color: "var(--cat-fs)", dim: "var(--cat-fs-dim)", border: "var(--cat-fs-border)" };
+    default:
+      return { color: "var(--cyan)", dim: "rgba(0,212,255,0.1)", border: "rgba(0,212,255,0.3)" };
+  }
+}
+
+/* ── main component ─────────────────────── */
 
 export function ProjectsCarousel() {
   const [category, setCategory] = useState<ProjectCategory>("All");
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [spotlightKey, setSpotlightKey] = useState(0); // for re-triggering animation
 
   const filteredProjects = useMemo(() => {
     if (category === "All") return projects;
@@ -39,21 +67,24 @@ export function ProjectsCarousel() {
 
   useEffect(() => {
     setActive(0);
+    setSpotlightKey((k) => k + 1);
   }, [category]);
 
   const gor = useCallback(() => {
     if (total === 0) return;
     setActive((a) => mod(a + 1, total));
+    setSpotlightKey((k) => k + 1);
   }, [total]);
 
   const gol = useCallback(() => {
     if (total === 0) return;
     setActive((a) => mod(a - 1, total));
+    setSpotlightKey((k) => k + 1);
   }, [total]);
 
   useEffect(() => {
     if (paused || selectedProject !== null || total === 0) return;
-    const id = window.setInterval(gor, 4000);
+    const id = window.setInterval(gor, 5000);
     return () => window.clearInterval(id);
   }, [paused, selectedProject, gor, total]);
 
@@ -70,69 +101,58 @@ export function ProjectsCarousel() {
     return () => window.removeEventListener("keydown", onKey);
   }, [gol, gor, active, selectedProject, filteredProjects]);
 
-  const distance = (i: number) => {
-    let d = i - active;
-    if (d > total / 2) d -= total;
-    if (d < -total / 2) d += total;
-    return d;
-  };
-
   const p = filteredProjects[active] || filteredProjects[0];
+  const accent = p ? getCategoryAccent(p.category) : getCategoryAccent();
 
   return (
     <>
-      {/* Category Filter Pills Bar */}
+      {/* ── Category Filter Pills ─────────────── */}
       <div
         style={{
           display: "flex",
           flexWrap: "wrap",
           alignItems: "center",
           gap: "8px",
-          marginBottom: "28px",
+          marginBottom: "32px",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "6px", marginRight: "8px", color: "var(--text-muted)", fontFamily: "JetBrains Mono, monospace", fontSize: "0.72rem" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "6px",
+            marginRight: "8px",
+            color: "var(--text-muted)",
+            fontFamily: "JetBrains Mono, monospace",
+            fontSize: "0.72rem",
+          }}
+        >
           <Filter size={13} style={{ color: "var(--cyan)" }} />
-          <span>FILTER_BY_DOMAIN:</span>
+          <span>FILTER:</span>
         </div>
 
         {CATEGORIES.map(({ label, icon }) => {
           const isSelected = category === label;
-          const count = label === "All" 
-            ? projects.length + archiveProjects.length
-            : projects.filter(p => p.category === label).length + archiveProjects.filter(a => a.category === label).length;
+          const count =
+            label === "All"
+              ? projects.length + archiveProjects.length
+              : projects.filter((p) => p.category === label).length +
+                archiveProjects.filter((a) => a.category === label).length;
 
           return (
             <button
               key={label}
+              className="filter-pill"
+              data-active={isSelected}
               onClick={() => setCategory(label)}
-              style={{
-                fontFamily: "JetBrains Mono, monospace",
-                fontSize: "0.72rem",
-                letterSpacing: "0.04em",
-                padding: "6px 14px",
-                borderRadius: "6px",
-                border: isSelected ? "1px solid var(--cyan)" : "1px solid rgba(0,212,255,0.15)",
-                background: isSelected ? "rgba(0,212,255,0.12)" : "rgba(10,21,32,0.6)",
-                color: isSelected ? "var(--cyan)" : "var(--text-dim)",
-                cursor: "pointer",
-                transition: "all 0.25s",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "6px",
-                boxShadow: isSelected ? "0 0 16px rgba(0,212,255,0.2)" : "none",
-              }}
             >
-              <span>{icon}</span>
+              <span style={{ fontSize: "0.8rem" }}>{icon}</span>
               <span>{label.toUpperCase()}</span>
               <span
+                className="filter-pill-count"
                 style={{
-                  fontSize: "0.62rem",
-                  padding: "1px 5px",
-                  borderRadius: "3px",
-                  background: isSelected ? "var(--cyan)" : "rgba(255,255,255,0.08)",
+                  background: isSelected ? "var(--cyan)" : "rgba(255,255,255,0.07)",
                   color: isSelected ? "#050a0e" : "var(--text-muted)",
-                  fontWeight: 700,
                 }}
               >
                 {count}
@@ -142,166 +162,93 @@ export function ProjectsCarousel() {
         })}
       </div>
 
+      {/* ── Flagship Spotlight ─────────────────── */}
       {total > 0 ? (
         <div
-          style={{ position: "relative" }}
           onMouseEnter={() => setPaused(true)}
           onMouseLeave={() => setPaused(false)}
         >
-          {/* Progress Bar & Active Title */}
+          {/* Progress + Nav */}
           <div
             style={{
               display: "flex",
               alignItems: "center",
               gap: "16px",
-              marginBottom: "32px",
+              marginBottom: "20px",
               fontFamily: "JetBrains Mono, monospace",
               fontSize: "0.7rem",
             }}
           >
-            <span style={{ color: "var(--text-muted)", letterSpacing: "0.1em" }}>
-              FLAGSHIP MISSION {String(active + 1).padStart(2, "0")}/{String(total).padStart(2, "0")}
+            <button
+              id="projects-prev"
+              onClick={gol}
+              aria-label="Previous project"
+              style={{
+                background: "rgba(13,27,42,0.9)",
+                border: "1px solid rgba(0,212,255,0.15)",
+                borderRadius: "6px",
+                padding: "6px 8px",
+                cursor: "pointer",
+                color: "var(--text-muted)",
+                transition: "all 0.25s",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <ChevronLeft size={16} />
+            </button>
+
+            <span style={{ color: "var(--text-muted)", letterSpacing: "0.1em", whiteSpace: "nowrap" }}>
+              MISSION {String(active + 1).padStart(2, "0")}/{String(total).padStart(2, "0")}
             </span>
-            <div style={{ flex: 1, height: "1px", background: "rgba(0,212,255,0.1)" }}>
+
+            <div style={{ flex: 1, height: "2px", background: "rgba(0,212,255,0.08)", borderRadius: "1px" }}>
               <div
                 style={{
                   height: "100%",
-                  background: "linear-gradient(90deg, var(--green), var(--cyan))",
+                  background: `linear-gradient(90deg, var(--green), ${accent.color})`,
                   width: `${((active + 1) / total) * 100}%`,
-                  transition: "width 0.5s cubic-bezier(.22,.61,.36,1)",
-                  boxShadow: "0 0 8px rgba(0,212,255,0.5)",
+                  transition: "width 0.6s cubic-bezier(.22,.61,.36,1)",
+                  boxShadow: `0 0 12px ${accent.color}40`,
+                  borderRadius: "1px",
                 }}
               />
             </div>
-            {p && (
-              <span
-                style={{
-                  color: "var(--cyan)",
-                  letterSpacing: "0.1em",
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  maxWidth: "280px",
-                  display: "inline-block",
-                  textAlign: "right",
-                  flexShrink: 0
-                }}
-                title={p.title.toUpperCase()}
-              >
-                {p.title.toUpperCase()}
-              </span>
-            )}
-          </div>
 
-          {/* Nav Controls */}
-          <button
-            id="projects-prev"
-            onClick={gol}
-            aria-label="Previous project"
-            style={{
-              position: "absolute",
-              left: 0,
-              top: "50%",
-              transform: "translateY(-50%)",
-              zIndex: 20,
-              background: "rgba(13,27,42,0.9)",
-              border: "1px solid rgba(0,212,255,0.2)",
-              borderRadius: "6px",
-              padding: "10px 8px",
-              cursor: "pointer",
-              color: "var(--cyan)",
-              transition: "all 0.2s",
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <ChevronLeft size={18} />
-          </button>
-
-          <button
-            id="projects-next"
-            onClick={gor}
-            aria-label="Next project"
-            style={{
-              position: "absolute",
-              right: 0,
-              top: "50%",
-              transform: "translateY(-50%)",
-              zIndex: 20,
-              background: "rgba(13,27,42,0.9)",
-              border: "1px solid rgba(0,212,255,0.2)",
-              borderRadius: "6px",
-              padding: "10px 8px",
-              cursor: "pointer",
-              color: "var(--cyan)",
-              transition: "all 0.2s",
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <ChevronRight size={18} />
-          </button>
-
-          {/* Cards Track */}
-          <div
-            style={{
-              position: "relative",
-              margin: "0 auto",
-              height: "380px",
-              overflow: "hidden",
-              padding: "0 40px",
-            }}
-          >
-            <div
+            <button
+              id="projects-next"
+              onClick={gor}
+              aria-label="Next project"
               style={{
-                pointerEvents: "none",
-                position: "absolute",
-                insetBlock: 0,
-                left: 0,
-                zIndex: 10,
-                width: "80px",
-                background: "linear-gradient(to right, var(--bg), transparent)",
-              }}
-            />
-            <div
-              style={{
-                pointerEvents: "none",
-                position: "absolute",
-                insetBlock: 0,
-                right: 0,
-                zIndex: 10,
-                width: "80px",
-                background: "linear-gradient(to left, var(--bg), transparent)",
-              }}
-            />
-
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
+                background: "rgba(13,27,42,0.9)",
+                border: "1px solid rgba(0,212,255,0.15)",
+                borderRadius: "6px",
+                padding: "6px 8px",
+                cursor: "pointer",
+                color: "var(--text-muted)",
+                transition: "all 0.25s",
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "center",
               }}
             >
-              {filteredProjects.map((proj, i) => (
-                <ProjectCard
-                  key={proj.title}
-                  p={proj}
-                  d={distance(i)}
-                  onClick={() => {
-                    if (i === active) setSelectedProject(proj);
-                    else setActive(i);
-                  }}
-                />
-              ))}
-            </div>
+              <ChevronRight size={16} />
+            </button>
           </div>
 
-          {/* Dots Indicator */}
+          {/* Spotlight Card */}
+          {p && (
+            <SpotlightCard
+              key={spotlightKey}
+              project={p}
+              accent={accent}
+              onOpen={() => setSelectedProject(p)}
+            />
+          )}
+
+          {/* Dot indicators */}
           <div
             style={{
-              marginTop: "20px",
+              marginTop: "24px",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
@@ -312,19 +259,23 @@ export function ProjectsCarousel() {
               <button
                 key={i}
                 id={`project-dot-${i}`}
-                onClick={() => setActive(i)}
+                onClick={() => {
+                  setActive(i);
+                  setSpotlightKey((k) => k + 1);
+                }}
                 aria-label={`Go to project ${i + 1}`}
                 style={{
-                  width: i === active ? "24px" : "6px",
+                  width: i === active ? "28px" : "6px",
                   height: "6px",
                   borderRadius: "3px",
-                  background: i === active
-                    ? "linear-gradient(90deg, var(--green), var(--cyan))"
-                    : "rgba(0,212,255,0.2)",
+                  background:
+                    i === active
+                      ? `linear-gradient(90deg, var(--green), ${accent.color})`
+                      : "rgba(0,212,255,0.15)",
                   border: "none",
                   cursor: "pointer",
-                  transition: "all 0.35s cubic-bezier(.22,.61,.36,1)",
-                  boxShadow: i === active ? "0 0 8px rgba(0,212,255,0.5)" : "none",
+                  transition: "all 0.4s cubic-bezier(.22,.61,.36,1)",
+                  boxShadow: i === active ? `0 0 10px ${accent.color}60` : "none",
                 }}
               />
             ))}
@@ -333,117 +284,415 @@ export function ProjectsCarousel() {
       ) : (
         <div
           style={{
-            padding: "32px",
+            padding: "48px 32px",
             textAlign: "center",
-            background: "rgba(10,21,32,0.6)",
-            border: "1px dashed rgba(0,212,255,0.2)",
-            borderRadius: "8px",
+            background: "rgba(10,21,32,0.5)",
+            border: "1px dashed rgba(0,212,255,0.15)",
+            borderRadius: "12px",
             color: "var(--text-muted)",
             fontFamily: "JetBrains Mono, monospace",
             fontSize: "0.8rem",
           }}
         >
-          No flagship projects found under {category}
+          <span style={{ fontSize: "1.5rem", display: "block", marginBottom: "8px" }}>∅</span>
+          No flagship missions found under <span style={{ color: "var(--cyan)" }}>{category}</span>
         </div>
       )}
 
-      {/* Auxiliary & Archive Projects */}
-      <div style={{ marginTop: "72px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "24px" }}>
-          <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: "0.8rem", color: "var(--cyan)", letterSpacing: "0.1em" }}>
-            [ AUXILIARY MISSIONS & ARCHIVE ]
-          </span>
-          <div style={{ flex: 1, height: "1px", background: "rgba(0,212,255,0.15)" }} />
-          <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: "0.7rem", color: "var(--text-muted)" }}>
-            {filteredArchive.length} RECORDS
-          </span>
-        </div>
-
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "20px" }}>
-          {filteredArchive.map((ap) => (
-            <div
-              key={ap.title}
-              onClick={() => setSelectedProject(ap)}
+      {/* ── Archive Grid ──────────────────────── */}
+      {filteredArchive.length > 0 && (
+        <div style={{ marginTop: "72px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "28px" }}>
+            <span
               style={{
-                background: "rgba(10,21,32,0.7)",
-                border: "1px solid rgba(0,212,255,0.12)",
-                borderRadius: "8px",
-                padding: "20px",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                cursor: "pointer",
-                transition: "all 0.25s ease",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,212,255,0.4)";
-                (e.currentTarget as HTMLElement).style.transform = "translateY(-3px)";
-                (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 24px rgba(0,212,255,0.08)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,212,255,0.12)";
-                (e.currentTarget as HTMLElement).style.transform = "none";
-                (e.currentTarget as HTMLElement).style.boxShadow = "none";
+                fontFamily: "JetBrains Mono, monospace",
+                fontSize: "0.78rem",
+                color: "var(--cyan)",
+                letterSpacing: "0.1em",
               }}
             >
-              <div>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "8px" }}>
-                  <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: "0.6rem", color: "var(--green)", letterSpacing: "0.08em" }}>
-                    {ap.codeName || "ARCHIVE"}
-                  </span>
-                  <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: "0.6rem", color: "var(--text-muted)" }}>
-                    {ap.status || "COMPLETED"}
-                  </span>
-                </div>
-                <h4 style={{ fontFamily: "Orbitron, JetBrains Mono, monospace", fontSize: "0.9rem", fontWeight: 700, color: "var(--text)", marginBottom: "8px" }}>
-                  {ap.title}
-                </h4>
-                <p style={{ fontSize: "0.78rem", color: "var(--text-dim)", lineHeight: 1.5, fontFamily: "Inter, sans-serif", marginBottom: "16px" }}>
-                  {ap.desc}
-                </p>
-              </div>
+              [ AUXILIARY MISSIONS & ARCHIVE ]
+            </span>
+            <div
+              style={{
+                flex: 1,
+                height: "1px",
+                background: "linear-gradient(90deg, rgba(0,212,255,0.2), transparent)",
+              }}
+            />
+            <span
+              style={{
+                fontFamily: "JetBrains Mono, monospace",
+                fontSize: "0.68rem",
+                color: "var(--text-muted)",
+              }}
+            >
+              {filteredArchive.length} RECORDS
+            </span>
+          </div>
 
-              <div>
-                {ap.highlight && (
-                  <div
-                    style={{
-                      marginBottom: "12px",
-                      fontFamily: "JetBrains Mono, monospace",
-                      fontSize: "0.62rem",
-                      color: "var(--green)",
-                      background: "rgba(0,255,136,0.06)",
-                      border: "1px solid rgba(0,255,136,0.18)",
-                      borderRadius: "4px",
-                      padding: "3px 6px",
-                      letterSpacing: "0.02em",
-                    }}
-                  >
-                    {ap.highlight}
-                  </div>
-                )}
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "4px", marginBottom: "16px" }}>
-                  {ap.tech.map((t) => (
-                    <span key={t} className="badge-tech" style={{ fontSize: "0.6rem", padding: "2px 6px" }}>{t}</span>
-                  ))}
-                </div>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
+              gap: "20px",
+            }}
+          >
+            {filteredArchive.map((ap, i) => {
+              const catAccent = getCategoryAccent(ap.category);
+              return (
+                <div
+                  key={ap.title}
+                  className="archive-card"
+                  style={{
+                    "--cat-accent": catAccent.color,
+                    animationDelay: `${i * 0.08}s`,
+                  } as React.CSSProperties}
+                  onClick={() => setSelectedProject(ap)}
+                >
+                  <div>
+                    {/* Header row */}
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        marginBottom: "10px",
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontFamily: "JetBrains Mono, monospace",
+                          fontSize: "0.6rem",
+                          color: catAccent.color,
+                          letterSpacing: "0.08em",
+                          background: catAccent.dim,
+                          padding: "2px 8px",
+                          borderRadius: "4px",
+                        }}
+                      >
+                        {ap.codeName || "ARCHIVE"}
+                      </span>
+                      <span
+                        style={{
+                          fontFamily: "JetBrains Mono, monospace",
+                          fontSize: "0.58rem",
+                          color: "var(--text-muted)",
+                          letterSpacing: "0.04em",
+                        }}
+                      >
+                        {ap.status || "COMPLETED"}
+                      </span>
+                    </div>
 
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: "12px", borderTop: "1px solid rgba(0,212,255,0.08)" }}>
-                  <span style={{ fontFamily: "JetBrains Mono, monospace", fontSize: "0.65rem", color: "var(--cyan)" }}>
-                    VIEW DETAILS →
-                  </span>
-                  <div style={{ display: "flex", gap: "8px" }}>
-                    {ap.repo && <Github size={14} style={{ color: "var(--text-muted)" }} />}
-                    {ap.live && <ExternalLink size={14} style={{ color: "var(--text-muted)" }} />}
-                    {ap.pdf && <FileText size={14} style={{ color: "var(--text-muted)" }} />}
+                    {/* Title */}
+                    <h4
+                      style={{
+                        fontFamily: "Orbitron, JetBrains Mono, monospace",
+                        fontSize: "0.88rem",
+                        fontWeight: 700,
+                        color: "var(--text)",
+                        marginBottom: "8px",
+                        lineHeight: 1.35,
+                      }}
+                    >
+                      {ap.title}
+                    </h4>
+
+                    {/* Description */}
+                    <p
+                      style={{
+                        fontSize: "0.78rem",
+                        color: "var(--text-dim)",
+                        lineHeight: 1.55,
+                        fontFamily: "Inter, sans-serif",
+                        marginBottom: "16px",
+                        display: "-webkit-box",
+                        WebkitLineClamp: 3,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                      }}
+                    >
+                      {ap.desc}
+                    </p>
+                  </div>
+
+                  <div>
+                    {/* Highlight */}
+                    {ap.highlight && (
+                      <div
+                        style={{
+                          marginBottom: "12px",
+                          fontFamily: "JetBrains Mono, monospace",
+                          fontSize: "0.62rem",
+                          color: catAccent.color,
+                          background: catAccent.dim,
+                          border: `1px solid ${catAccent.border}`,
+                          borderRadius: "5px",
+                          padding: "4px 8px",
+                          letterSpacing: "0.02em",
+                        }}
+                      >
+                        {ap.highlight}
+                      </div>
+                    )}
+
+                    {/* Tech badges */}
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: "4px", marginBottom: "16px" }}>
+                      {ap.tech.slice(0, 5).map((t) => (
+                        <span
+                          key={t}
+                          className="badge-tech"
+                          style={{ fontSize: "0.6rem", padding: "2px 7px" }}
+                        >
+                          {t}
+                        </span>
+                      ))}
+                      {ap.tech.length > 5 && (
+                        <span
+                          className="badge-tech"
+                          style={{ fontSize: "0.6rem", padding: "2px 7px", opacity: 0.5 }}
+                        >
+                          +{ap.tech.length - 5}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Footer */}
+                    <div className="archive-card-footer">
+                      <span className="archive-card-cta">
+                        VIEW DETAILS{" "}
+                        <span className="archive-card-cta-arrow">→</span>
+                      </span>
+                      <div style={{ display: "flex", gap: "8px" }}>
+                        {ap.repo && <Github size={13} style={{ color: "var(--text-muted)" }} />}
+                        {ap.live && <ExternalLink size={13} style={{ color: "var(--text-muted)" }} />}
+                        {ap.pdf && <FileText size={13} style={{ color: "var(--text-muted)" }} />}
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          ))}
+              );
+            })}
+          </div>
         </div>
+      )}
+
+      {selectedProject && (
+        <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />
+      )}
+    </>
+  );
+}
+
+/* ── Spotlight Card ─────────────────────── */
+
+function SpotlightCard({
+  project,
+  accent,
+  onOpen,
+}: {
+  project: Project;
+  accent: { color: string; dim: string; border: string };
+  onOpen: () => void;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  return (
+    <div
+      ref={ref}
+      className="spotlight-wrap"
+      style={{ cursor: "pointer" }}
+      onClick={onOpen}
+    >
+      {/* Image side */}
+      <div className="spotlight-image-side">
+        <Image
+          src={project.image}
+          alt={project.title}
+          fill
+          className="object-cover"
+          style={{
+            animation: "spotlight-image-in 0.7s cubic-bezier(0.22,0.61,0.36,1) forwards",
+          }}
+        />
+        {/* Diagonal gradient overlay */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(135deg, transparent 30%, rgba(13,27,42,0.4) 60%, rgba(13,27,42,0.95) 100%)",
+          }}
+        />
+        {/* Bottom fade for blending */}
+        <div
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: "120px",
+            background: "linear-gradient(to top, rgba(13,27,42,0.9), transparent)",
+          }}
+        />
+
+        {/* Code name badge on image */}
+        <div
+          style={{
+            position: "absolute",
+            top: "16px",
+            left: "16px",
+            fontFamily: "JetBrains Mono, monospace",
+            fontSize: "0.6rem",
+            letterSpacing: "0.1em",
+            color: accent.color,
+            background: "rgba(5,10,14,0.85)",
+            border: `1px solid ${accent.border}`,
+            borderRadius: "6px",
+            padding: "4px 10px",
+            zIndex: 5,
+            backdropFilter: "blur(8px)",
+          }}
+        >
+          {project.codeName || "MISSION_ACTIVE"}
+        </div>
+
+        {/* Category badge */}
+        {project.category && (
+          <div
+            style={{
+              position: "absolute",
+              bottom: "16px",
+              left: "16px",
+              fontFamily: "JetBrains Mono, monospace",
+              fontSize: "0.6rem",
+              letterSpacing: "0.06em",
+              color: accent.color,
+              background: accent.dim,
+              border: `1px solid ${accent.border}`,
+              borderRadius: "5px",
+              padding: "3px 10px",
+              zIndex: 5,
+            }}
+          >
+            {project.category.toUpperCase()}
+          </div>
+        )}
       </div>
 
-      {selectedProject && <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />}
-    </>
+      {/* Content side */}
+      <div
+        className="spotlight-content-side"
+        style={{
+          animation: "spotlight-content-in 0.6s cubic-bezier(0.22,0.61,0.36,1) 0.15s both",
+        }}
+      >
+        {/* Status line */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            marginBottom: "16px",
+            fontFamily: "JetBrains Mono, monospace",
+            fontSize: "0.62rem",
+          }}
+        >
+          <span
+            style={{
+              width: "6px",
+              height: "6px",
+              borderRadius: "50%",
+              background: "var(--green)",
+              boxShadow: "0 0 8px rgba(0,255,136,0.6)",
+              animation: "blink 2s ease infinite",
+              flexShrink: 0,
+            }}
+          />
+          <span style={{ color: "var(--green)", letterSpacing: "0.08em" }}>
+            {project.status || "ACTIVE"}
+          </span>
+        </div>
+
+        {/* Title */}
+        <h3
+          style={{
+            fontFamily: "Orbitron, JetBrains Mono, monospace",
+            fontSize: "1.15rem",
+            fontWeight: 700,
+            color: "var(--text)",
+            letterSpacing: "0.03em",
+            lineHeight: 1.35,
+            marginBottom: "14px",
+          }}
+        >
+          {project.title}
+        </h3>
+
+        {/* Highlight */}
+        {project.highlight && (
+          <div
+            style={{
+              marginBottom: "14px",
+              fontFamily: "JetBrains Mono, monospace",
+              fontSize: "0.68rem",
+              color: accent.color,
+              background: accent.dim,
+              border: `1px solid ${accent.border}`,
+              borderRadius: "6px",
+              padding: "6px 12px",
+              letterSpacing: "0.02em",
+              display: "inline-block",
+            }}
+          >
+            {project.highlight}
+          </div>
+        )}
+
+        {/* Description */}
+        <p
+          style={{
+            fontSize: "0.82rem",
+            color: "var(--text-dim)",
+            lineHeight: 1.65,
+            fontFamily: "Inter, sans-serif",
+            marginBottom: "20px",
+            display: "-webkit-box",
+            WebkitLineClamp: 5,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+          }}
+        >
+          {project.desc}
+        </p>
+
+        {/* Tech stack */}
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "24px" }}>
+          {project.tech.map((t) => (
+            <span key={t} className="badge-tech" style={{ fontSize: "0.65rem" }}>
+              {t}
+            </span>
+          ))}
+        </div>
+
+        {/* CTA */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            fontFamily: "JetBrains Mono, monospace",
+            fontSize: "0.72rem",
+            color: accent.color,
+            letterSpacing: "0.06em",
+            marginTop: "auto",
+          }}
+        >
+          <ArrowRight size={14} />
+          <span>CLICK TO VIEW FULL DETAILS</span>
+        </div>
+      </div>
+    </div>
   );
 }

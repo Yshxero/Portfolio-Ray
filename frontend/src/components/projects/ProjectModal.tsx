@@ -1,38 +1,43 @@
+"use client";
+
+import { useEffect } from "react";
 import Image from "next/image";
 import { X, ExternalLink, Github, FileText, Download } from "lucide-react";
 import type { Project } from "@/types";
 
 type Props = { project: Project; onClose: () => void };
 
-export function ProjectModal({ project, onClose }: Props) {
-  return (
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 60,
-        display: "grid",
-        placeItems: "center",
-        padding: "24px",
-        background: "rgba(5,10,14,0.88)",
-        backdropFilter: "blur(16px)",
-      }}
-      onMouseDown={onClose}
-    >
-      <div
-        style={{
-          width: "100%",
-          maxWidth: "720px",
-          overflow: "hidden",
-          borderRadius: "10px",
-          border: "1px solid rgba(0,212,255,0.25)",
-          background: "rgba(13,27,42,0.98)",
-          boxShadow: "0 0 80px rgba(0,212,255,0.1), 0 32px 64px rgba(0,0,0,0.8)",
-          position: "relative",
-        }}
-        onMouseDown={(e) => e.stopPropagation()}
-      >
+function getCategoryAccent(cat?: string) {
+  switch (cat) {
+    case "AI & RAG":
+      return { color: "var(--cat-ai)", dim: "var(--cat-ai-dim)", border: "var(--cat-ai-border)" };
+    case "Rust & Systems":
+      return { color: "var(--cat-rust)", dim: "var(--cat-rust-dim)", border: "var(--cat-rust-border)" };
+    case "IoT & Hardware":
+      return { color: "var(--cat-iot)", dim: "var(--cat-iot-dim)", border: "var(--cat-iot-border)" };
+    case "Full-Stack":
+      return { color: "var(--cat-fs)", dim: "var(--cat-fs-dim)", border: "var(--cat-fs-border)" };
+    default:
+      return { color: "var(--cyan)", dim: "rgba(0,212,255,0.1)", border: "rgba(0,212,255,0.3)" };
+  }
+}
 
+export function ProjectModal({ project, onClose }: Props) {
+  const accent = getCategoryAccent(project.category);
+
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, []);
+
+  return (
+    <div className="modal-overlay" onMouseDown={onClose}>
+      <div className="modal-content" onMouseDown={(e) => e.stopPropagation()}>
+        {/* Top gradient accent */}
         <div
           style={{
             position: "absolute",
@@ -40,21 +45,13 @@ export function ProjectModal({ project, onClose }: Props) {
             left: 0,
             right: 0,
             height: "2px",
-            background: "linear-gradient(90deg, var(--green), var(--cyan), var(--green))",
+            background: `linear-gradient(90deg, var(--green), ${accent.color}, var(--green))`,
+            zIndex: 11,
           }}
         />
 
-
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            padding: "12px 20px",
-            borderBottom: "1px solid rgba(0,212,255,0.1)",
-            background: "rgba(0,0,0,0.4)",
-          }}
-        >
+        {/* Title bar */}
+        <div className="modal-titlebar">
           <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#ff5f57" }} />
           <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#ffbd2e" }} />
           <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#28c840" }} />
@@ -62,102 +59,148 @@ export function ProjectModal({ project, onClose }: Props) {
             style={{
               marginLeft: "10px",
               fontFamily: "JetBrains Mono, monospace",
-              fontSize: "0.65rem",
+              fontSize: "0.62rem",
               color: "var(--text-muted)",
               letterSpacing: "0.1em",
               flex: 1,
             }}
           >
-            MISSION_DETAIL.log
+            {project.codeName || "MISSION_DETAIL"}.log
           </span>
           <button
             id="modal-close"
+            className="modal-close-btn"
             onClick={onClose}
             aria-label="Close modal"
-            style={{
-              background: "none",
-              border: "1px solid rgba(0,212,255,0.2)",
-              borderRadius: "4px",
-              padding: "4px",
-              cursor: "pointer",
-              color: "var(--text-dim)",
-              display: "flex",
-              alignItems: "center",
-              transition: "all 0.2s",
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.color = "var(--cyan)";
-              (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,212,255,0.5)";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.color = "var(--text-dim)";
-              (e.currentTarget as HTMLElement).style.borderColor = "rgba(0,212,255,0.2)";
-            }}
           >
-            <X size={14} />
+            <X size={12} />
+            <span>ESC</span>
           </button>
         </div>
 
-
-        <div style={{ position: "relative", height: "220px" }}>
-          <Image src={project.image} alt={project.title} fill className="object-cover" />
+        {/* Hero image */}
+        <div style={{ position: "relative", height: "260px", overflow: "hidden" }}>
+          <Image
+            src={project.image}
+            alt={project.title}
+            fill
+            className="object-cover"
+            style={{ filter: "brightness(0.85)" }}
+          />
+          {/* Gradient overlays */}
           <div
             style={{
               position: "absolute",
               inset: 0,
-              background: "linear-gradient(to top, rgba(13,27,42,1) 0%, rgba(13,27,42,0.2) 60%, transparent 100%)",
+              background:
+                "linear-gradient(to top, rgba(13,27,42,1) 0%, rgba(13,27,42,0.3) 50%, transparent 100%)",
             }}
           />
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: `linear-gradient(135deg, transparent 40%, ${accent.dim} 100%)`,
+              opacity: 0.6,
+            }}
+          />
+
+          {/* Category pill on image */}
+          {project.category && (
+            <div
+              style={{
+                position: "absolute",
+                top: "16px",
+                right: "16px",
+                fontFamily: "JetBrains Mono, monospace",
+                fontSize: "0.6rem",
+                letterSpacing: "0.06em",
+                color: accent.color,
+                background: "rgba(5,10,14,0.8)",
+                border: `1px solid ${accent.border}`,
+                borderRadius: "6px",
+                padding: "4px 12px",
+                backdropFilter: "blur(8px)",
+              }}
+            >
+              {project.category.toUpperCase()}
+            </div>
+          )}
         </div>
 
-
-        <div style={{ padding: "20px 24px 24px" }}>
-
+        {/* Content */}
+        <div style={{ padding: "24px 28px 28px" }}>
+          {/* Title */}
           <h3
             style={{
               fontFamily: "Orbitron, JetBrains Mono, monospace",
-              fontSize: "1.1rem",
+              fontSize: "1.2rem",
               fontWeight: 700,
               color: "var(--text)",
-              letterSpacing: "0.04em",
-              lineHeight: 1.3,
+              letterSpacing: "0.03em",
+              lineHeight: 1.35,
             }}
           >
             {project.title}
           </h3>
 
+          {/* Mission ID & Status */}
           {project.codeName && (
             <div
               style={{
                 display: "flex",
                 flexWrap: "wrap",
-                gap: "12px",
-                fontFamily: "var(--font-mono), JetBrains Mono, monospace",
-                fontSize: "0.65rem",
-                color: "var(--green)",
-                letterSpacing: "0.08em",
-                marginTop: "6px",
-                marginBottom: "4px",
+                gap: "10px",
+                fontFamily: "JetBrains Mono, monospace",
+                fontSize: "0.62rem",
+                marginTop: "8px",
+                marginBottom: "6px",
+                alignItems: "center",
               }}
             >
-              <span>MISSION_ID: {project.codeName}</span>
-              <span style={{ color: "var(--text-muted)" }}>|</span>
-              <span style={{ color: "var(--cyan)" }}>STATUS: {project.status || "ACTIVE"}</span>
+              <span
+                style={{
+                  color: accent.color,
+                  background: accent.dim,
+                  padding: "2px 8px",
+                  borderRadius: "4px",
+                  letterSpacing: "0.06em",
+                }}
+              >
+                {project.codeName}
+              </span>
+              <span style={{ color: "var(--text-muted)" }}>│</span>
+              <span style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+                <span
+                  style={{
+                    width: "5px",
+                    height: "5px",
+                    borderRadius: "50%",
+                    background: "var(--green)",
+                    boxShadow: "0 0 6px rgba(0,255,136,0.6)",
+                    display: "inline-block",
+                  }}
+                />
+                <span style={{ color: "var(--green)", letterSpacing: "0.06em" }}>
+                  {project.status || "ACTIVE"}
+                </span>
+              </span>
             </div>
           )}
 
+          {/* Highlight */}
           {project.highlight && (
             <div
               style={{
-                marginTop: "10px",
+                marginTop: "14px",
                 fontFamily: "JetBrains Mono, monospace",
                 fontSize: "0.72rem",
-                color: "var(--green)",
-                background: "rgba(0,255,136,0.08)",
-                border: "1px solid rgba(0,255,136,0.25)",
-                borderRadius: "6px",
-                padding: "8px 12px",
-                letterSpacing: "0.03em",
+                color: accent.color,
+                background: accent.dim,
+                border: `1px solid ${accent.border}`,
+                borderRadius: "8px",
+                padding: "10px 14px",
+                letterSpacing: "0.02em",
                 display: "inline-block",
               }}
             >
@@ -165,74 +208,61 @@ export function ProjectModal({ project, onClose }: Props) {
             </div>
           )}
 
+          {/* Description */}
           <p
             style={{
-              marginTop: "12px",
+              marginTop: "16px",
               color: "var(--text-dim)",
-              lineHeight: 1.7,
-              fontSize: "0.875rem",
+              lineHeight: 1.75,
+              fontSize: "0.88rem",
               fontFamily: "Inter, sans-serif",
             }}
           >
             {project.desc}
           </p>
 
-
-          <div style={{ marginTop: "16px" }}>
+          {/* Tech Stack section */}
+          <div style={{ marginTop: "20px" }}>
+            <div
+              style={{
+                fontFamily: "JetBrains Mono, monospace",
+                fontSize: "0.6rem",
+                color: "var(--text-muted)",
+                letterSpacing: "0.12em",
+                marginBottom: "10px",
+              }}
+            >
+              TECH STACK
+            </div>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
               {project.tech.map((t) => (
-                <span key={t} className="badge-tech">{t}</span>
+                <span key={t} className="badge-tech">
+                  {t}
+                </span>
               ))}
             </div>
           </div>
 
-
+          {/* Divider */}
           <div
             style={{
-              margin: "20px 0",
+              margin: "24px 0",
               height: "1px",
-              background: "rgba(0,212,255,0.1)",
+              background: `linear-gradient(90deg, ${accent.border}, transparent)`,
             }}
           />
 
-
+          {/* Actions */}
           <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
-            {project.pdf && (
-              <>
-                <a
-                  href={project.pdf}
-                  target="_blank"
-                  rel="noreferrer"
-                  id="modal-view-pdf"
-                  style={{ textDecoration: "none" }}
-                >
-                  <span className="btn-secondary" style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
-                    <FileText size={13} /> VIEW PDF
-                  </span>
-                </a>
-                <a
-                  href={project.pdf}
-                  download
-                  id="modal-download-pdf"
-                  style={{ textDecoration: "none" }}
-                >
-                  <span className="btn-secondary" style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
-                    <Download size={13} /> DOWNLOAD
-                  </span>
-                </a>
-              </>
-            )}
             {project.live && (
               <a
                 href={project.live}
                 target="_blank"
                 rel="noreferrer"
                 id="modal-live"
-                style={{ textDecoration: "none" }}
+                className="modal-action-btn modal-action-primary"
               >
-                <span className="btn-primary" style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
-                  <ExternalLink size={13} /> LIVE APP
-                </span>
+                <ExternalLink size={14} /> LIVE APP
               </a>
             )}
             {project.repo && (
@@ -241,12 +271,31 @@ export function ProjectModal({ project, onClose }: Props) {
                 target="_blank"
                 rel="noreferrer"
                 id="modal-repo"
-                style={{ textDecoration: "none" }}
+                className="modal-action-btn modal-action-secondary"
               >
-                <span className="btn-secondary" style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}>
-                  <Github size={13} /> GITHUB
-                </span>
+                <Github size={14} /> GITHUB
               </a>
+            )}
+            {project.pdf && (
+              <>
+                <a
+                  href={project.pdf}
+                  target="_blank"
+                  rel="noreferrer"
+                  id="modal-view-pdf"
+                  className="modal-action-btn modal-action-secondary"
+                >
+                  <FileText size={14} /> VIEW PDF
+                </a>
+                <a
+                  href={project.pdf}
+                  download
+                  id="modal-download-pdf"
+                  className="modal-action-btn modal-action-secondary"
+                >
+                  <Download size={14} /> DOWNLOAD
+                </a>
+              </>
             )}
           </div>
         </div>
